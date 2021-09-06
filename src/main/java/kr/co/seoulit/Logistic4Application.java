@@ -26,6 +26,7 @@ import kr.co.seoulit.system.common.interceptor.SiteMeshFilter;
 public class Logistic4Application{
 
 	public static void main(String[] args) {
+		int a = 1;
 		SpringApplication.run(Logistic4Application.class, args);
 	}
 	// SiteMeshFilter web.xml 에 적용해주는거랑 같음
