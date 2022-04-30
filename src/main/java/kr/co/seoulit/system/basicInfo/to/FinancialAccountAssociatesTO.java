@@ -2,8 +2,10 @@ package kr.co.seoulit.system.basicInfo.to;
 
 import kr.co.seoulit.system.base.to.BaseTO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class FinancialAccountAssociatesTO extends BaseTO {
 	private String accountOpenPlace;
 	private String financialAccountNote;

@@ -1,8 +1,10 @@
 package kr.co.seoulit.logistics.material.to;
 
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
 
 @Data
+@Dataset(name="gds_orderDialogTemp")
 public class OrderDialogTempTO {
 	
 	private String mrpGatheringNo;

@@ -15,27 +15,29 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import kr.co.seoulit.system.authorityManager.mapper.UserMenuDAO;
 import kr.co.seoulit.system.authorityManager.serviceFacade.AuthorityManagerServiceFacade;
 import kr.co.seoulit.system.authorityManager.to.AuthorityGroupTO;
 import kr.co.seoulit.system.authorityManager.to.EmployeeAuthorityTO;
-
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @RestController
 @RequestMapping("/authorityManager/*")
 public class AuthorityGroupController{
 
-	@Autowired
-	private AuthorityManagerServiceFacade authorityManagerSF;
-	private Gson gson = new GsonBuilder().serializeNulls().create();
-	private ModelMap modelMap = new ModelMap();
+
+	private final AuthorityManagerServiceFacade authorityManagerServiceFacade;
+	private static Gson gson = new GsonBuilder().serializeNulls().create();
+	private static  ModelMap modelMap = new ModelMap();
 	
-	@RequestMapping(value="/getUserAuthorityGroup.do", method=RequestMethod.GET)
+	@RequestMapping(value="/getUserAuthorityGroup", method=RequestMethod.GET)
 	public ModelMap getUserAuthorityGroup(HttpServletRequest request) {
 	
 		String empCode = request.getParameter("empCode");
 		
 		try {
 		
-			ArrayList<AuthorityGroupTO> authorityGroupTOList = authorityManagerSF.getUserAuthorityGroup(empCode);
+			ArrayList<AuthorityGroupTO> authorityGroupTOList = authorityManagerServiceFacade.getUserAuthorityGroup(empCode);
 			
 			modelMap.put("gridRowJson", authorityGroupTOList);
 			modelMap.put("errorCode", 1);
@@ -51,12 +53,12 @@ public class AuthorityGroupController{
 		return modelMap;
 	}
 	
-	@RequestMapping(value="/getAuthorityGroup.do", method=RequestMethod.GET)
+	@RequestMapping(value="/getAuthorityGroup", method=RequestMethod.GET)
 	public ModelMap getAuthorityGroup(HttpServletRequest request) {
 		
 		try {
 			
-			ArrayList<AuthorityGroupTO> authorityGroupTOList = authorityManagerSF.getAuthorityGroup();
+			ArrayList<AuthorityGroupTO> authorityGroupTOList = authorityManagerServiceFacade.getAuthorityGroup();
 			
 			modelMap.put("gridRowJson", authorityGroupTOList);
 			modelMap.put("errorCode", 1);
@@ -72,7 +74,7 @@ public class AuthorityGroupController{
 		return modelMap;
 	}
 
-	@RequestMapping(value="/insertEmployeeAuthorityGroup.do", method=RequestMethod.POST)
+	@RequestMapping(value="/insertEmployeeAuthorityGroup", method=RequestMethod.POST)
 	public ModelMap insertEmployeeAuthorityGroup(HttpServletRequest request) {
 		
 		String empCode = request.getParameter("empCode");
@@ -83,7 +85,7 @@ public class AuthorityGroupController{
 		
 		try {
 	
-			authorityManagerSF.insertEmployeeAuthorityGroup(empCode, employeeAuthorityTOList);
+			authorityManagerServiceFacade.insertEmployeeAuthorityGroup(empCode, employeeAuthorityTOList);
 
 			modelMap.put("errorCode", 1);
 			modelMap.put("errorMsg", "성공");

@@ -2,6 +2,8 @@ package kr.co.seoulit.logistics.production.serviceFacade;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import kr.co.seoulit.logistics.production.to.ContractDetailInMpsAvailableTO;
 import kr.co.seoulit.logistics.production.to.MpsTO;
@@ -10,6 +12,7 @@ import kr.co.seoulit.logistics.production.to.MrpTO;
 import kr.co.seoulit.logistics.production.to.ProductionPerformanceInfoTO;
 import kr.co.seoulit.logistics.production.to.SalesPlanInMpsAvailableTO;
 import kr.co.seoulit.logistics.production.to.WorkOrderInfoTO;
+import kr.co.seoulit.logistics.production.to.WorkOrderSimulationTO;
 
 public interface ProductionServiceFacade {
 
@@ -21,7 +24,7 @@ public interface ProductionServiceFacade {
 	public ArrayList<SalesPlanInMpsAvailableTO> 
 		getSalesPlanListInMpsAvailable(String searchCondition, String startDate, String endDate);
 
-	public HashMap<String, Object> convertContractDetailToMps(
+	public List<MpsTO> convertContractDetailToMps(
 			ArrayList<ContractDetailInMpsAvailableTO> contractDetailInMpsAvailableList);
 
 	public HashMap<String, Object> convertSalesPlanToMps(
@@ -40,7 +43,7 @@ public interface ProductionServiceFacade {
 	public HashMap<String, Object> openMrp(ArrayList<String> mpsNoArr);
 
 	public HashMap<String, Object> registerMrp(String mrpRegisterDate, 
-			ArrayList<String> mpsList);
+			String mpsNo);
 	
 	public HashMap<String, Object> batchMrpListProcess(ArrayList<MrpTO> mrpTOList);
 	
@@ -50,19 +53,19 @@ public interface ProductionServiceFacade {
 	
 	public HashMap<String, Object> getWorkOrderableMrpList();
 	
-	public HashMap<String,Object> getWorkOrderSimulationList(String mrpGatheringNo,String mrpNo);
+	public ArrayList<WorkOrderSimulationTO> getWorkOrderSimulationList( ArrayList<String> mrpNo);
 	
-	public HashMap<String,Object> workOrder(String mrpGatheringNo,String workPlaceCode,String productionProcess,String mrpNo);
+	public HashMap<String,Object> workOrder(ArrayList<String> mrpGatheringNo,String workPlaceCode,String productionProcess,ArrayList<String> mrpNo);
 	
 	public ArrayList<WorkOrderInfoTO> getWorkOrderInfoList();
 	
 	public HashMap<String,Object> workOrderCompletion(String workOrderNo,String actualCompletionAmount);
 
-	public ArrayList<ProductionPerformanceInfoTO> getProductionPerformanceInfoList();
+	public ArrayList<ProductionPerformanceInfoTO> getProductionPerformanceInfoList(String startDate,String endDate);
 	
-	public HashMap<String,Object> showWorkSiteSituation(String workSiteCourse,String workOrderNo,String itemClassIfication);
+	public HashMap<String,Object> showWorkSiteSituation(String workSiteCourse,String workOrderNo);
 	
-	public void workCompletion(String workOrderNo,String itemCode, ArrayList<String> itemCodeListArr);
+	public void workCompletion(String workOrderNo);
 	
 	public HashMap<String,Object> workSiteLogList(String workSiteLogDate);
 

@@ -194,7 +194,7 @@
     {headerName: "품목코드", field: "itemCode"},
     {headerName: "품목명", field: "itemName"},
     {headerName: "단위", field: "unitOfContract"},
-    {headerName: "비고", field: "description", editable: true, hide: true},
+    {headerName: "비고", field: "description", editable: true, hide: true}
   ];
   // event.colDef.field
   let rowData = [];
@@ -255,7 +255,7 @@
     mpsGridOptions.api.setRowData([]);
     // o ajax
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', "${pageContext.request.contextPath}/production/searchContractDetailInMpsAvailable.do"
+    xhr.open('GET', "${pageContext.request.contextPath}/production/searchContractDetailInMpsAvailable"
         + "?method=searchContractDetailListInMpsAvailable"
         + "&searchCondition=" + searchCondition
         + "&startDate=" + startDate
@@ -358,6 +358,7 @@
   // O MPS 등록
   registerNewMpsBtn.addEventListener("click", () => {
     let selectedNodes = mpsGridOptions.api.getSelectedNodes();
+
     // o No seleted Nodes
     if (selectedNodes == "") {
       Swal.fire({
@@ -378,6 +379,7 @@
       }
       // 계획일자, 출하예정일을 new Date() 함수로 날짜 타입으로 변환
       encodeURI(resultList.push(node.data)); // 체크한 수주상세 행의 데이터
+      node.data.status="insert";
       resultRows.push(node.data);
       console.log(resultList);
     }
@@ -395,7 +397,7 @@
     }).then((result) => {
       if (result.isConfirmed) {
       let xhr = new XMLHttpRequest();
-      xhr.open('POST', "${pageContext.request.contextPath}/production/convertContractDetailToMps.do"
+      xhr.open('POST', "${pageContext.request.contextPath}/production/convertContractDetailToMps"
           + "?method=convertContractDetailToMps"
           + "&batchList=" + encodeURI(resultList),
           true);
@@ -443,13 +445,15 @@
       }
     };
   })();
+  
+  
   // O Select MPS
   mpsModalBtn.addEventListener("click", () => {   // MPS 조회
     if (startDatePicker.value == "" || endDatePicker.value == "") {
       swal.fire("입력", "조회기간을 설정해야합니다.", "info");
       return;
     } else {
-      _getMpsList();
+      _getMpsList();  // getMpsList()호출로 modal.js에서 MPS 조회
       _setMpsModal();
       $('#mpsModal').modal('show');
     }

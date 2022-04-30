@@ -1,5 +1,10 @@
 package kr.co.seoulit.logistics.material.to;
 
+import kr.co.seoulit.system.common.annotation.Dataset;
+import lombok.Data;
+
+@Data
+@Dataset(name="gds_stockLog")
 public class StockLogTO {
 	
 	private String logDate;
@@ -8,49 +13,5 @@ public class StockLogTO {
 	private String amount;
 	private String reason;
 	private String cause;
-	private String effect;
-	
-	public String getLogDate() {
-		return logDate;
-	}
-	public void setLogDate(String logDate) {
-		this.logDate = logDate;
-	}
-	public String getItemCode() {
-		return itemCode;
-	}
-	public void setItemCode(String itemCode) {
-		this.itemCode = itemCode;
-	}
-	public String getItemName() {
-		return itemName;
-	}
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-	public String getAmount() {
-		return amount;
-	}
-	public void setAmount(String amount) {
-		this.amount = amount;
-	}
-	public String getReason() {
-		return reason;
-	}
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-	public String getCause() {
-		return cause;
-	}
-	public void setCause(String cause) {
-		this.cause = cause;
-	}
-	public String getEffect() {
-		return effect;
-	}
-	public void setEffect(String effect) {
-		this.effect = effect;
-	}
-	
+	private String effect;	
 }

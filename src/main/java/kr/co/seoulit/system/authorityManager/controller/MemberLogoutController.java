@@ -2,6 +2,11 @@ package kr.co.seoulit.system.authorityManager.controller;
 
 
 import org.springframework.web.servlet.ModelAndView;
+
+import kr.co.seoulit.system.authorityManager.serviceFacade.AuthorityManagerServiceFacade;
+import kr.co.seoulit.system.common.mapper.DatasetBeanMapper;
+import lombok.AllArgsConstructor;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -12,19 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+@AllArgsConstructor
 @RestController
 public class MemberLogoutController {
 	
-    protected final Log logger = LogFactory.getLog(this.getClass());
 
-    @RequestMapping(value="/logout.do", method=RequestMethod.GET)
+
+    @RequestMapping(value="/logout", method=RequestMethod.GET)
     public ModelAndView Logout(HttpServletRequest request) {
     
         HttpSession session = request.getSession();
         session.invalidate();
-        logger.debug("*******OUT*****MemberLogoutController*******OUT*****");
-
+       
         return new ModelAndView("loginForm");
     }
 }

@@ -2,6 +2,8 @@ package kr.co.seoulit.logistics.production.applicationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import kr.co.seoulit.logistics.production.to.ContractDetailInMpsAvailableTO;
 import kr.co.seoulit.logistics.production.to.MpsTO;
@@ -16,7 +18,7 @@ public interface MpsApplicationService {
 	public ArrayList<SalesPlanInMpsAvailableTO> 
 		getSalesPlanListInMpsAvailable(String searchCondition, String startDate, String endDate);
 
-	public HashMap<String, Object> convertContractDetailToMps(
+	public List<MpsTO> convertContractDetailToMps(
 			ArrayList<ContractDetailInMpsAvailableTO> contractDetailInMpsAvailableList);
 
 	public HashMap<String, Object> convertSalesPlanToMps(

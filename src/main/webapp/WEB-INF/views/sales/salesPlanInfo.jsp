@@ -378,7 +378,7 @@ function initEvent() {
 				
 				$.ajax({ 
 					type : 'POST',
-					url : '${pageContext.request.contextPath}/sales/batchSalesPlanListProcess.do' ,
+					url : '${pageContext.request.contextPath}/sales/batchSalesPlanListProcess' ,
 					data : {
 						method : 'batchListProcess', 
 						batchList : JSON.stringify(resultList),
@@ -474,7 +474,7 @@ function initEvent() {
 			if( confirmStatus == true ) {
 				$.ajax({ 
 					type : 'POST',
-					url : '${pageContext.request.contextPath}/sales/batchSalesPlanListProcess.do' ,
+					url : '${pageContext.request.contextPath}/sales/batchSalesPlanListProcess' ,
 					async :false,
 					data : {
 						method : 'batchListProcess', 
@@ -532,7 +532,7 @@ function showSalesPlanGrid() {
 	// ajax 시작
 	$.ajax({ 
 		type : 'GET',
-		url : '${pageContext.request.contextPath}/sales/searchSalesPlan.do' ,
+		url : '${pageContext.request.contextPath}/sales/searchSalesPlan' ,
 		data : {
 			method : 'searchSalesPlanInfo', 
 			startDate : $("#startDatePicker").val() ,
@@ -614,7 +614,7 @@ function showCodeDialog(grid, rowid, iCol, divisionCodeNo, title){
 	$.jgrid.gridUnload("#codeGrid");
 	
 	$("#codeGrid").jqGrid({
-            url: "${pageContext.request.contextPath}/base/codeList.do",
+            url: "${pageContext.request.contextPath}/base/codeList",
             datatype: "json",
             jsonReader: { root: "detailCodeList" },
             postData: { 

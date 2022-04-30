@@ -1,9 +1,19 @@
 package kr.co.seoulit.system.basicInfo.to;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import kr.co.seoulit.system.base.to.BaseTO;
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
+@Entity
+@Table(name="WORKPLACE")
+@Dataset(name="gds_workplace")
 public class WorkplaceTO extends BaseTO {
 	private String workplaceCeoName;
 	private String isMainOffice;
@@ -17,10 +27,12 @@ public class WorkplaceTO extends BaseTO {
 	private String workplaceName;
 	private String workplaceBasicAddress;
 	private String workplaceCloseDate;
+	@Id
 	private String workplaceCode;
 	private String companyCode;
 	private String workplaceOpenDate;
 	private String corporationLicenseNumber;
 	private String workplaceZipCode;
+	
 
 }

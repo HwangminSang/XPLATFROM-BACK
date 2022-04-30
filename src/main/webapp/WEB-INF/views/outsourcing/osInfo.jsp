@@ -117,7 +117,7 @@
             const selectValue=$("#materialStatus").val();
             console.log(selectValue);
             $.ajax({
-     		   url:"/outsourcing/getOutSourcingList.do",
+     		   url:"/outsourcing/getOutSourcingList",
 	    		data:{
 	    			method:"searchOutSourcingList",
 	    			fromDate:fromDate,

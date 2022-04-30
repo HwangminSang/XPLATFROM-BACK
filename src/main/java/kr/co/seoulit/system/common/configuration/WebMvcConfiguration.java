@@ -4,35 +4,42 @@ import java.nio.charset.Charset;
 
 import javax.servlet.Filter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import kr.co.seoulit.system.common.interceptor.LoggerInterceptor;
 import kr.co.seoulit.system.common.interceptor.LoginInterceptor;
+import kr.co.seoulit.system.common.interceptor.XplatformInterceptor;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer{
 
+	@Autowired
+	private XplatformInterceptor xplatformInterceptor;
 	
-	@Override
+	@Override  //인터셉터 등록
 	public void addInterceptors(InterceptorRegistry registry){
-		registry.addInterceptor(new LoginInterceptor()) //로그인 인터셉터
+		registry.addInterceptor(new LoginInterceptor()) 		//로그인 인터셉터
 			.addPathPatterns("/*")
 			.addPathPatterns("/*/*.html")
 			.excludePathPatterns("/*logout*")
 			.excludePathPatterns("/*login*")
 			.excludePathPatterns("/error");
 		
+		//registry.addInterceptor(new LoggerInterceptor());
+		//xplatform적용시키기
+		registry.addInterceptor(xplatformInterceptor);
 		registry.addInterceptor(new LoggerInterceptor());
 		
 		WebMvcConfigurer.super.addInterceptors(registry);
 	}
+	
 	// 2개의 빈은 인코딩 관련.
 	@Bean
 	public Filter characterEncodingFilter(){

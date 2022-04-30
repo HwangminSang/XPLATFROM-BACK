@@ -43,7 +43,7 @@ public class ExcelController{
 	@Autowired
 	private BaseServiceFacade baseSF;
 	
-	@RequestMapping(value="/downloadExcel.do")
+	@RequestMapping(value="/downloadExcel")
 	public void downloadEstimateExcel(HttpServletRequest request, HttpServletResponse response) {
 		String target = request.getParameter("target");
 		String data = request.getParameter("data");

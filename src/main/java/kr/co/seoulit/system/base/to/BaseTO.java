@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class BaseTO {
 
-	
 	protected String status = "NORMAL";
 
 }

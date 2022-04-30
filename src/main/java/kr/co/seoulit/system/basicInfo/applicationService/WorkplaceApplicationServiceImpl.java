@@ -2,6 +2,7 @@ package kr.co.seoulit.system.basicInfo.applicationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
@@ -9,9 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.system.base.dao.CodeDetailDAO;
+import kr.co.seoulit.system.base.mapper.CodeDetailDAO;
 import kr.co.seoulit.system.base.to.CodeDetailTO;
-import kr.co.seoulit.system.basicInfo.dao.WorkplaceDAO;
+import kr.co.seoulit.system.basicInfo.mapper.WorkplaceDAO;
+import kr.co.seoulit.system.basicInfo.repository.WorkplaceRepository;
 import kr.co.seoulit.system.basicInfo.to.WorkplaceTO;
 
 @Component
@@ -25,11 +27,19 @@ public class WorkplaceApplicationServiceImpl implements WorkplaceApplicationServ
 	private WorkplaceDAO workplaceDAO;
 	@Autowired
 	private CodeDetailDAO codeDetailDAO;
+	@Autowired
+	private WorkplaceRepository workplaceRepository;
 
 	public ArrayList<WorkplaceTO> getWorkplaceList(String companyCode) {
+		/* jpa 구현
 		ArrayList<WorkplaceTO> workplaceList = null;
 		workplaceList = workplaceDAO.selectWorkplaceList(companyCode);
 		return workplaceList;
+		*/
+		List<WorkplaceTO> workplaceList = workplaceRepository.findByCompanyCode(companyCode);
+		
+		return new ArrayList<>(workplaceList);
+		
 	}
 
 	public String getNewWorkplaceCode(String companyCode) {

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.system.base.dao.AddressDAO;
+import kr.co.seoulit.system.base.mapper.AddressDAO;
 import kr.co.seoulit.system.base.to.AddressTO;
 
 @Component

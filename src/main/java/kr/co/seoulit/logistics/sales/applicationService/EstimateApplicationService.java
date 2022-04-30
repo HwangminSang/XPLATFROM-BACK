@@ -2,6 +2,7 @@ package kr.co.seoulit.logistics.sales.applicationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import kr.co.seoulit.logistics.sales.to.EstimateDetailTO;
 import kr.co.seoulit.logistics.sales.to.EstimateTO;
@@ -17,7 +18,7 @@ public interface EstimateApplicationService {
 
 	public HashMap<String, Object> addNewEstimate(String estimateDate, EstimateTO newEstimateTO);
 
-	public HashMap<String, Object> batchEstimateDetailListProcess(ArrayList<EstimateDetailTO> estimateDetailTOList,String estimateNo);	
+	public HashMap<String, Object> batchEstimateDetailListProcess(List<EstimateDetailTO> estimateDetailTOList);	
 	
 	public String getNewEstimateDetailNo(String estimateDate);
 }

@@ -603,7 +603,7 @@
     }).then( (result) => {
       if (result.isConfirmed) {
       let xhr = new XMLHttpRequest();
-      xhr.open('POST', "${pageContext.request.contextPath}/sales/addNewEstimate.do?method=addNewEstimate&estimateDate="
+      xhr.open('POST', "${pageContext.request.contextPath}/sales/addNewEstimate?method=addNewEstimate&estimateDate="
           + datepicker.value + "&newEstimateInfo=" + encodeURI(newEstimateRowValue),
           true);
       xhr.setRequestHeader('Accept', 'application/json');

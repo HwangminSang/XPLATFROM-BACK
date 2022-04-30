@@ -1,8 +1,10 @@
 package kr.co.seoulit.logistics.production.to;
 
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
 
 @Data
+@Dataset(name="gds_productionPerformance")
 public class ProductionPerformanceInfoTO {
 
 	private String workOrderCompletionDate;

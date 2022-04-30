@@ -2,10 +2,17 @@ package kr.co.seoulit.logistics.sales.to;
 
 import java.util.ArrayList;
 
+import javax.persistence.Transient;
+
 import kr.co.seoulit.system.base.to.BaseTO;
+import kr.co.seoulit.system.common.annotation.Dataset;
+import kr.co.seoulit.system.common.annotation.RemoveColumn;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
+@Dataset(name="gds_contractInfo")
 public class ContractInfoTO extends BaseTO {
 
 	private String contractNo;
@@ -20,6 +27,7 @@ public class ContractInfoTO extends BaseTO {
 	private String personCodeInCharge;
 	private String empNameInCharge;
 	private String description;
+	@RemoveColumn
 	private ArrayList<ContractDetailTO> contractDetailTOList;
 	private String deliveryCompletionStatus;
 

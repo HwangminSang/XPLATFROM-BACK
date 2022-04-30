@@ -450,7 +450,7 @@
             console.log(dateApply);
             estimuloInfoGridOptions.api.setRowData([]);
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', '${pageContext.request.contextPath}/sales/searchEstimate.do' +
+            xhr.open('GET', '${pageContext.request.contextPath}/sales/searchEstimate' +
                 "?method=searchEstimateInfo"
                 + "&startDate=" + fromDate.value
                 + "&endDate=" + toDate.value
@@ -504,7 +504,7 @@
         	    }).then( (result) => {
         	      if (result.isConfirmed) {
         	      let xhr = new XMLHttpRequest();
-        	      xhr.open('POST', '${pageContext.request.contextPath}/sales/deleteEstimate.do' +
+        	      xhr.open('POST', '${pageContext.request.contextPath}/sales/deleteEstimate' +
         	                "?method=deleteEstimate"
         	                + "&estimateNo=" + estimateNo,
         	                true);
@@ -567,7 +567,7 @@
 	        $preparingFileModal.dialog({ modal: true });
 	        setTimeout(function() {
 	        	$("#progressbar").progressbar({value: false});
-		        $.fileDownload("/base/downloadExcel.do?method=downloadEstimateExcel&target=estimate&data="+getRowIdValue, {
+		        $.fileDownload("/base/downloadExcel?method=downloadEstimateExcel&target=estimate&data="+getRowIdValue, {
 		            successCallback: function (url) {
 		            	setTimeout(function(){
 			                $preparingFileModal.dialog('close');
@@ -583,7 +583,7 @@
 	        // 버튼의 원래 클릭 이벤트를 중지 시키기 위해 필요합니다.
 	        return false;
         	/* $.ajax({
-        		url:"${pageContext.request.contextPath}/base/downloadExcel.do",
+        		url:"${pageContext.request.contextPath}/base/downloadExcel",
         		data:{
         			method:"downloadEstimateExcel",
         			target:"estimate",
@@ -686,7 +686,7 @@
         	
         	estimateDetailInfoGridOptions.api.setRowData([]);
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', '${pageContext.request.contextPath}/sales/searchEstimateDetailInfo.do' +
+            xhr.open('GET', '${pageContext.request.contextPath}/sales/searchEstimateDetailInfo' +
                 "?method=searchEstimateDetailInfo"
                 + "&estimateNo=" + getRowIdValue,
                 true)
@@ -817,7 +817,7 @@
         }).then( (isConfirm) => {
             if (!isConfirm) {return;}
             let xhr = new XMLHttpRequest();
-            xhr.open('POST', "/sales/batchEstimateDetailListProcess.do?method=batchListProcess&batchList=" + encodeURI(newEstimateRowValue),
+            xhr.open('POST', "/sales/batchEstimateDetailListProcess?method=batchListProcess&batchList=" + encodeURI(newEstimateRowValue),
                 true);
             xhr.setRequestHeader('Accept', 'application/json');
             xhr.send();

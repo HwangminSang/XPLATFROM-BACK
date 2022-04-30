@@ -24,7 +24,7 @@ public interface MaterialServiceFacade {
 	
 	public HashMap<String,Object> getOrderList(String startDate, String endDate);
 	
-	public HashMap<String,Object> getOrderDialogInfo(String mrpNoArr);
+	public HashMap<String,Object> getOrderDialogInfo(String mrpGatheringNoListStr);
 	
 	public HashMap<String,Object> order(ArrayList<String> mrpGaNoArr);
 	

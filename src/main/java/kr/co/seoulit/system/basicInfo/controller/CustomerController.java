@@ -29,7 +29,7 @@ public class CustomerController{
 	// GSON 라이브러리
 	private static Gson gson = new GsonBuilder().serializeNulls().create(); // 속성값이 null 인 속성도 JSON 변환
 
-	@RequestMapping(value="/searchCustomer.do", method=RequestMethod.GET)
+	@RequestMapping(value="/searchCustomer", method=RequestMethod.GET)
 	public ModelAndView searchCustomerList(HttpServletRequest request) {
 		String searchCondition = request.getParameter("searchCondition");
 
@@ -48,7 +48,7 @@ public class CustomerController{
 		return new ModelAndView("jsonView",map);
 	}
 
-	@RequestMapping(value="/batchCustomerListProcess.do", method=RequestMethod.POST)
+	@RequestMapping(value="/batchCustomerListProcess", method=RequestMethod.POST)
 	public ModelAndView batchListProcess(HttpServletRequest request) {
 
 		String batchList = request.getParameter("batchList");

@@ -2,20 +2,23 @@ package kr.co.seoulit.hr.affair.applicationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.hr.affair.dao.EmpSearchingDAO;
-import kr.co.seoulit.hr.affair.dao.EmployeeBasicDAO;
-import kr.co.seoulit.hr.affair.dao.EmployeeDetailDAO;
-import kr.co.seoulit.hr.affair.dao.EmployeeSecretDAO;
+import kr.co.seoulit.hr.affair.mapper.EmpSearchingDAO;
+import kr.co.seoulit.hr.affair.mapper.EmployeeBasicDAO;
+import kr.co.seoulit.hr.affair.mapper.EmployeeDetailDAO;
+import kr.co.seoulit.hr.affair.mapper.EmployeeSecretDAO;
+import kr.co.seoulit.hr.affair.repository.EmployeeRepository;
 import kr.co.seoulit.hr.affair.to.EmpInfoTO;
 import kr.co.seoulit.hr.affair.to.EmployeeBasicTO;
 import kr.co.seoulit.hr.affair.to.EmployeeDetailTO;
 import kr.co.seoulit.hr.affair.to.EmployeeSecretTO;
-import kr.co.seoulit.system.base.dao.CodeDetailDAO;
+import kr.co.seoulit.hr.affair.to.EmployeeTO;
+import kr.co.seoulit.system.base.mapper.CodeDetailDAO;
 import kr.co.seoulit.system.base.to.CodeDetailTO;
 
 @Component
@@ -31,6 +34,8 @@ public class EmpApplicationServiceImpl implements EmpApplicationService {
 	private EmpSearchingDAO empSearchDAO;
 	@Autowired
 	private CodeDetailDAO codeDetailDAO;
+	@Autowired
+	private EmployeeRepository employeeRepository;
 		
 	public ArrayList<EmpInfoTO> getAllEmpList(String searchCondition, String[] paramArray) {
 
@@ -124,7 +129,7 @@ public class EmpApplicationServiceImpl implements EmpApplicationService {
 						Integer no = Integer.parseInt(TO.getEmpCode().split("EMP-")[1]);
 						empCodeNoSet.add(no);
 					} catch (NumberFormatException e) {
-						// "EMP-" 다음 부분을 Integer 로 변환하지 못하는 경우 : 그냥 다음 반복문 실행
+						// "EMP-" �떎�쓬 遺�遺꾩쓣 Integer 濡� 蹂��솚�븯吏� 紐삵븯�뒗 寃쎌슦 : 洹몃깷 �떎�쓬 諛섎났臾� �떎�뻾
 					}
 				}
 			}
@@ -157,7 +162,7 @@ public class EmpApplicationServiceImpl implements EmpApplicationService {
 
 					insertList.add(TO.getEmpCode());
 
-					// CODE_DETAIL 테이블에 Insert
+					// CODE_DETAIL �뀒�씠釉붿뿉 Insert
 					detailCodeTO.setDivisionCodeNo("HR-02");
 					detailCodeTO.setDetailCode(TO.getEmpCode());
 					detailCodeTO.setDetailCodeName(TO.getEmpEngName());
@@ -196,14 +201,14 @@ public class EmpApplicationServiceImpl implements EmpApplicationService {
 					empDetailDAO.insertEmployeeDetail(bean);
 					insertList.add(bean.getEmpCode());
 
-					// 사원 계정 정지 => EMPLOYEE_BASIC 테이블의 USER_OR_NOT 컬럼을 "N" 으로 변경
-					// 새로운 userPassWord 를 null 로 입력
-					if (bean.getUpdateHistory().equals("계정 정지")) {
+					// �궗�썝 怨꾩젙 �젙吏� => EMPLOYEE_BASIC �뀒�씠釉붿쓽 USER_OR_NOT 而щ읆�쓣 "N" �쑝濡� 蹂�寃�
+					// �깉濡쒖슫 userPassWord 瑜� null 濡� �엯�젰
+					if (bean.getUpdateHistory().equals("怨꾩젙 �젙吏�")) {
 
 						changeEmpAccountUserStatus(bean.getCompanyCode(), bean.getEmpCode(), "N");
 
-						// 사원 계정 정지 => EMPLOYEE_SECRET 테이블에 userPassWord 가 null 인 새로운 EmployeeSecretTO
-						// 생성, Insert
+						// �궗�썝 怨꾩젙 �젙吏� => EMPLOYEE_SECRET �뀒�씠釉붿뿉 userPassWord 媛� null �씤 �깉濡쒖슫 EmployeeSecretTO
+						// �깮�꽦, Insert
 						int newSeq = empSecretDAO.selectUserPassWordCount(bean.getCompanyCode(), bean.getEmpCode());
 
 						EmployeeSecretTO newSecretBean = new EmployeeSecretTO();
@@ -280,7 +285,7 @@ public class EmpApplicationServiceImpl implements EmpApplicationService {
 
 			}
 
-		return duplicated; // 중복된 코드이면 true 반환
+		return duplicated; // 以묐났�맂 肄붾뱶�씠硫� true 諛섑솚
 	}
 
 	@Override
@@ -299,7 +304,7 @@ public class EmpApplicationServiceImpl implements EmpApplicationService {
 				}
 			}
 
-		return duplicated; // 중복된 코드이면 true 반환
+		return duplicated; // 以묐났�맂 肄붾뱶�씠硫� true 諛섑솚
 	}
 
 	@Override
@@ -318,5 +323,20 @@ public class EmpApplicationServiceImpl implements EmpApplicationService {
 		empDetailDAO.updateEmployeeImg(employeeDetailTO);
 		
 	}
+	
+	@Override
+	public ArrayList<EmployeeTO> getEmployeeList() {
+		
+		List<EmployeeTO> employee = employeeRepository.findAll();			
+
+		return new ArrayList<>(employee);
+	}
+	
+	@Override
+	public void batchEmpInfo(EmployeeTO employee) {
+		
+		employeeRepository.save(employee);
+		
+	} 
 
 }

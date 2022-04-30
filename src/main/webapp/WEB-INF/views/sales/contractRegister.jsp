@@ -228,7 +228,7 @@
     // estDetailGridOptions.api.setRowData([]);
     // o ajax
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', "${pageContext.request.contextPath}/sales/searchEstimateInContractAvailable.do?"
+    xhr.open('GET', "${pageContext.request.contextPath}/sales/searchEstimateInContractAvailable?"
         + "method=searchEstimateInContractAvailable"
         + "&startDate=" + startDate
         + "&endDate=" + endDate,
@@ -387,7 +387,7 @@
       })
       return;
     }
-    console.log(selectedNodes[0].data);
+    console.log(selectedNodes[0].data);	
     estDetailGridOptions.api.setRowData([]);
     let addList=[];
     estimateDetailList.map((unit, idx) => {
@@ -396,6 +396,7 @@
       }
     });
 	estDetailGridOptions.api.setRowData(addList);
+
     /*[].forEach.bind(unit.estimateDetailTOList)((val) => {
         console.log(val);
         estimateDetailList.push(val);
@@ -447,7 +448,7 @@
       let xhr = new XMLHttpRequest();
       let now = new Date();
       let today = now.getFullYear() + "-" +('0' + (now.getMonth() +1 )).slice(-2) + "-" + ('0' + now.getDate()).slice(-2);
-      xhr.open('POST', "${pageContext.request.contextPath}/sales/addNewContract.do?"
+      xhr.open('POST', "${pageContext.request.contextPath}/sales/addNewContract?"
           + "method=addNewContract"
           + "&batchList=" + encodeURI(newEstimateRowValue)
           + "&personCodeInCharge=" + "${sessionScope.empCode}"

@@ -147,7 +147,7 @@
 	let authorityGroupData;
 	function getAuthorityGroupData(){
         let xhr = new XMLHttpRequest(); 
-        xhr.open('GET', '${pageContext.request.contextPath}/authorityManager/getAuthorityGroup.do' +
+        xhr.open('GET', '${pageContext.request.contextPath}/authorityManager/getAuthorityGroup' +
             "?method=getAuthorityGroup",
             true);
         xhr.setRequestHeader('Accept', 'application/json');
@@ -176,7 +176,7 @@
 		authorityGroupCode = authorityGoupRows[0].authorityGroupCode;
 		// console.log(authorityGroupCode);
         let xhr = new XMLHttpRequest(); 
-        xhr.open('GET', '${pageContext.request.contextPath}/authorityManager/getMenuAuthority.do' +
+        xhr.open('GET', '${pageContext.request.contextPath}/authorityManager/getMenuAuthority' +
             "?method=getMenuAuthority&authorityGroupCode="+authorityGroupCode, 
             true);
         xhr.setRequestHeader('Accept', 'application/json');
@@ -222,7 +222,7 @@
 					// console.log(insertData); 
 						
  		  	        let xhr = new XMLHttpRequest(); 
-			        xhr.open('POST', '${pageContext.request.contextPath}/authorityManager/insertMenuAuthority.do' +
+			        xhr.open('POST', '${pageContext.request.contextPath}/authorityManager/insertMenuAuthority' +
 			            "?method=insertMenuAuthority"+
 			            "&authorityGroupCode="+authorityGroupCode+
 			            "&insertData="+encodeURI(insertData),

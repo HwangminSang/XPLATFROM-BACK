@@ -2,10 +2,17 @@ package kr.co.seoulit.hr.affair.to;
 
 import java.util.ArrayList;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import kr.co.seoulit.system.base.to.BaseTO;
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
+@Dataset(name="gds_employee")
 public class EmpInfoTO extends BaseTO {
 	private String socialSecurityNumber;
 	private String empEngName;

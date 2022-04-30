@@ -4,65 +4,75 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.tobesoft.xplatform.data.PlatformData;
 
 import kr.co.seoulit.logistics.material.serviceFacade.MaterialServiceFacade;
 import kr.co.seoulit.logistics.material.to.StockLogTO;
 import kr.co.seoulit.logistics.material.to.StockTO;
-
+import kr.co.seoulit.system.common.mapper.DatasetBeanMapper;
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @RestController
 @RequestMapping("/material/*")
 public class StockController{
 	// serviceFacade 참조변수 선언
-	@Autowired
-	private MaterialServiceFacade purchaseSF;
-	// GSON 라이브러리
-	private static Gson gson = new GsonBuilder().serializeNulls().create(); // 속성값이 null 인 속성도 json 변환
 
-	@RequestMapping(value="/searchStockList.do" , method=RequestMethod.GET)
-	public ModelAndView searchStockList() {
+	private final MaterialServiceFacade materialServiceFacade;
 
-		HashMap<String, Object> map = new HashMap<>();
-		ArrayList<StockTO> stockList = purchaseSF.getStockList();
+	private final DatasetBeanMapper datasetBeanMapper;
 
-		map.put("gridRowJson", stockList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-		return new ModelAndView("jsonView",map);
+	
+	//재고관리 재고 클릭시 자동으로 받아옴
+	@RequestMapping(value="/searchStockList")
+	public void searchStockList(@RequestAttribute("resData")PlatformData resData) throws Exception {
+
+		
+		// jpa 구현
+		ArrayList<StockTO> stockList = materialServiceFacade.getStockList();
+		
+		datasetBeanMapper.beansToDataset(resData, stockList, StockTO.class);
+	
 	}
 
-	@RequestMapping(value="/searchStockLogList.do" , method=RequestMethod.GET)
-	public ModelAndView searchStockLogList(HttpServletRequest request) {
+	//재고로그리스트
+	@RequestMapping(value="/searchStockLogList")
+	public void searchStockLogList(@RequestAttribute("resData")PlatformData resData,
+			                       @RequestAttribute("reqData")PlatformData reqData) throws Exception {
 
-		HashMap<String, Object> map = new HashMap<>();
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
-		ArrayList<StockLogTO> stockLogList = purchaseSF.getStockLogList(startDate,endDate);
+		String startDate = reqData.getVariable("startDate").getString();
+		String endDate = reqData.getVariable("endDate").getString();
 
-		map.put("gridRowJson", stockLogList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-		return new ModelAndView("jsonView",map);
+		// jpa 구현 고려
+		ArrayList<StockLogTO> stockLogList = materialServiceFacade.getStockLogList(startDate,endDate);
+		
+		datasetBeanMapper.beansToDataset(resData, stockLogList, StockLogTO.class);
+		
 	}
 
-	@RequestMapping(value="/warehousing.do", method=RequestMethod.POST)
-	public ModelAndView warehousing(HttpServletRequest request) {
-		String orderNoListStr = request.getParameter("orderNoList");
-
-		ArrayList<String> orderNoArr = gson.fromJson(orderNoListStr,new TypeToken<ArrayList<String>>(){}.getType());	
-
-		HashMap<String, Object> resultMap = new HashMap<>();
-		resultMap = purchaseSF.warehousing(orderNoArr);
-		return new ModelAndView("jsonView",resultMap);
+	//입고
+	@RequestMapping(value="/warehousing")
+	public void warehousing(@RequestAttribute("reqData") PlatformData reqData,
+			                @RequestAttribute("resData") PlatformData resData) throws Exception {
+		
+	
+		String orderNoList = reqData.getVariableList().getString("orderNoList"); //pk
+		
+		ArrayList<String> orderNoArr = new ArrayList<>();
+		orderNoArr.add(orderNoList);
+		
+		//jpa 미구현 - procedure 호출
+		HashMap<String, Object> resultMap=materialServiceFacade.warehousing(orderNoArr);
+		resData.getVariableList().add("g_procedureMsg", resultMap.get("errorMsg"));
+		resData.getVariableList().add("g_procedureCode", resultMap.get("errorCode"));
+		
 	}
+	
 }

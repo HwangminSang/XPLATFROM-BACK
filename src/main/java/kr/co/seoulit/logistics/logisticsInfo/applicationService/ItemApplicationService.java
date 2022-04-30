@@ -13,7 +13,7 @@ public interface ItemApplicationService {
 	
 	public HashMap<String, Object> batchItemListProcess(ArrayList<ItemTO> itemTOList);
 		
-	public int getStandardUnitPrice(String itemCode);
+	public ItemTO getStandardUnitPrice(String itemCode);
 	
 	public int getStandardUnitPriceBox(String itemCode);
 }

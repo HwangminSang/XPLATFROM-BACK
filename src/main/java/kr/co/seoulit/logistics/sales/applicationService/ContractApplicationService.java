@@ -10,6 +10,8 @@ import kr.co.seoulit.logistics.sales.to.EstimateTO;
 
 public interface ContractApplicationService {
 
+	public ArrayList<ContractInfoTO> getContractListByCondition(HashMap<String, String> map);
+	
 	public ArrayList<ContractInfoTO> getContractList(String searchCondition, String[] paramArray);
 
 	public ArrayList<ContractDetailTO> getContractDetailList(String estimateNo);
@@ -25,6 +27,6 @@ public interface ContractApplicationService {
 
 	public void changeContractStatusInEstimate(String estimateNo , String contractStatus);
 	
-	public ArrayList<ContractInfoTO> getDeliverableContractList(String searchCondition, String[] paramArray);
+	public ArrayList<ContractInfoTO> getDeliverableContractList(HashMap<String, String> map);
 
 }

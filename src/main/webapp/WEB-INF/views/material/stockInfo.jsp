@@ -199,7 +199,7 @@
   }
   const showStockGrid = () => {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', '${pageContext.request.contextPath}/material/searchStockList.do' +
+    xhr.open('GET', '${pageContext.request.contextPath}/material/searchStockList' +
         "?method=searchStockList",
         true)
     xhr.setRequestHeader('Accept', 'application/json');
@@ -273,7 +273,7 @@
 	      }).then((result)=>{
 	    	  if (result.isConfirmed) {
 	    	        let xhr = new XMLHttpRequest();
-	    	        xhr.open('POST', '${pageContext.request.contextPath}/material/checkOrderInfo.do' +
+	    	        xhr.open('POST', '${pageContext.request.contextPath}/material/checkOrderInfo' +
 	    	            "?method=checkOrderInfo"
 	    	            + "&orderNoList=" + encodeURI(JSON.stringify(orderNoList)),
 	    	            true)
@@ -323,7 +323,7 @@
     }).then((result) => {
       if (result.isConfirmed) {
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', '${pageContext.request.contextPath}/material/warehousing.do' +
+        xhr.open('POST', '${pageContext.request.contextPath}/material/warehousing' +
             "?method=warehousing"
             + "&orderNoList=" + encodeURI(JSON.stringify(orderNoList)),
             true)

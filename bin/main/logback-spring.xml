@@ -7,6 +7,7 @@
 			<Pattern> %5p [%c] %m%n</Pattern>
 		</encoder>   
 	</appender>
+	
 	<appender name="console-infolog" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<Pattern> %5p %m%n</Pattern>
@@ -28,12 +29,18 @@
     </appender>
     
 	<!-- 로거 -->
-	<logger name="jdbc.sqlonly" level="INFO" appender-ref="console-infolog"/>
-	<logger name="jdbc.resultsettable" level="INFO" appender-ref="console-infolog"/>
-	<logger name="org.springframework" level="error"/>
-	<logger name="org.springframework.jdbc" level="error"/>		
+	  <logger name="jdbc" level="off"/>
+    <logger name="jdbc.sqlonly" level="off"/>
+    <logger name="jdbc.sqltiming" level="off"/>
+    <logger name="jdbc.audit" level="off"/>
+    <logger name="jdbc.resultset" level="off"/>
+    <logger name="jdbc.resultsettable" level="debug"/>
+    <logger name="jdbc.connection" level="off"/>
+	<logger name="org.springframework" level="off"/>
+	<logger name="org.springframework.jdbc" level="off"/>		
+	
 	<!-- 루트 로거 -->
-	<root level="all">
+	<root level="info">  <!--  error -->
 			<appender-ref ref="console"/>
 			<appender-ref ref="ROLLING"/>
 	</root>

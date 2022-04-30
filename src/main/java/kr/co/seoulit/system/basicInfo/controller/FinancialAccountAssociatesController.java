@@ -24,12 +24,12 @@ import kr.co.seoulit.system.basicInfo.to.FinancialAccountAssociatesTO;
 public class FinancialAccountAssociatesController{
 	// serviceFacade 참조변수 선언
 	@Autowired
-	private BasicInfoServiceFacade cooperatorSF;
+	private BasicInfoServiceFacade basicInfoServiceFacade;
 
 	// GSON 라이브러리
 	private static Gson gson = new GsonBuilder().serializeNulls().create(); // 속성값이 null 인 속성도 JSON 변환
 
-	@RequestMapping(value="/searchFinancialAccountAssociatesList.do", method = RequestMethod.GET)
+	@RequestMapping(value="/searchFinancialAccountAssociatesList", method = RequestMethod.GET)
 	public ModelAndView searchFinancialAccountAssociatesList(HttpServletRequest request) {
 
 		String searchCondition = request.getParameter("searchCondition");
@@ -39,7 +39,7 @@ public class FinancialAccountAssociatesController{
 		ArrayList<FinancialAccountAssociatesTO> financialAccountAssociatesList = null;
 
 		HashMap<String, Object> map = new HashMap<>();
-		financialAccountAssociatesList = cooperatorSF.getFinancialAccountAssociatesList(searchCondition,
+		financialAccountAssociatesList = basicInfoServiceFacade.getFinancialAccountAssociatesList(searchCondition,
 				workplaceCode);
 
 		map.put("gridRowJson", financialAccountAssociatesList);
@@ -48,7 +48,7 @@ public class FinancialAccountAssociatesController{
 		return new ModelAndView("jsonView",map);
 	}
 
-	@RequestMapping(value="/batchFinancialAccountAssociatesListProcess.do", method = RequestMethod.POST)
+	@RequestMapping(value="/batchFinancialAccountAssociatesListProcess", method = RequestMethod.POST)
 	public ModelAndView batchListProcess(HttpServletRequest request) {
 
 		String batchList = request.getParameter("batchList");
@@ -58,7 +58,7 @@ public class FinancialAccountAssociatesController{
 				}.getType());
 
 		HashMap<String, Object> map = new HashMap<>();
-		HashMap<String, Object> resultMap = cooperatorSF
+		HashMap<String, Object> resultMap = basicInfoServiceFacade
 				.batchFinancialAccountAssociatesListProcess(financialAccountAssociatesList);
 
 		map.put("result", resultMap);

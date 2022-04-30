@@ -1,8 +1,13 @@
 package kr.co.seoulit.logistics.production.to;
 
 import kr.co.seoulit.system.base.to.BaseTO;
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 @Data
+@EqualsAndHashCode(callSuper=false)
+@Dataset(name="gds_mrpOpenTemp")
 public class OpenMrpTO extends BaseTO {
 	
 	private String mpsNo;

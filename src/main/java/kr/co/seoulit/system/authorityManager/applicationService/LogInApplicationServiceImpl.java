@@ -8,30 +8,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.hr.affair.dao.EmpSearchingDAO;
-import kr.co.seoulit.hr.affair.dao.EmployeeSecretDAO;
+import kr.co.seoulit.hr.affair.mapper.EmpSearchingDAO;
+import kr.co.seoulit.hr.affair.mapper.EmployeeSecretDAO;
 import kr.co.seoulit.hr.affair.to.EmpInfoTO;
 import kr.co.seoulit.hr.affair.to.EmployeeSecretTO;
 import kr.co.seoulit.system.authorityManager.to.AuthorityGroupMenuTO;
 import kr.co.seoulit.system.authorityManager.to.AuthorityGroupTO;
-import kr.co.seoulit.system.authorityManager.dao.AuthorityGroupDAO;
-import kr.co.seoulit.system.authorityManager.dao.MenuAuthorityDAO;
+import lombok.AllArgsConstructor;
 import kr.co.seoulit.system.authorityManager.exception.IdNotFoundException;
 import kr.co.seoulit.system.authorityManager.exception.PwMissMatchException;
 import kr.co.seoulit.system.authorityManager.exception.PwNotFoundException;
-
+import kr.co.seoulit.system.authorityManager.mapper.AuthorityGroupDAO;
+import kr.co.seoulit.system.authorityManager.mapper.MenuAuthorityDAO;
+@AllArgsConstructor
 @Component
 public class LogInApplicationServiceImpl implements LogInApplicationService {
 
 	// DAO 참조변수 선언
-	@Autowired
-	private EmpSearchingDAO empSearchDAO;
-	@Autowired
-	private EmployeeSecretDAO empSecretDAO;
-	@Autowired
-	private MenuAuthorityDAO menuAuthorityDAO;
-	@Autowired
-	private AuthorityGroupDAO authorityGroupDAO;
+
+	private final EmpSearchingDAO empSearchDAO;
+
+	private final EmployeeSecretDAO empSecretDAO;
+
+	private final MenuAuthorityDAO menuAuthorityDAO;
+
+	private final AuthorityGroupDAO authorityGroupDAO;
 
 	public EmpInfoTO accessToAuthority(String companyCode, String workplaceCode, String inputId, String inputPassWord)
 			throws IdNotFoundException, PwMissMatchException, PwNotFoundException, DataAccessException {

@@ -1,10 +1,20 @@
 package kr.co.seoulit.logistics.material.to;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
 
 @Data
+@Entity
+@Table(name="ORDER_INFO")
+@Dataset(name="gds_orderInfo")
 public class OrderInfoTO {
 	
+	@Id
 	private String orderNo;
 	private String orderDate;
 	private String orderInfoStatus;
@@ -13,4 +23,7 @@ public class OrderInfoTO {
 	private String itemName;
 	private String orderAmount;
 	private String inspectionStatus;
+	
+	@Transient //체크 상태 그리드의
+	private String checked;
 }

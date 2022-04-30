@@ -486,7 +486,7 @@ legend {
 							$
 									.ajax({
 										type : 'GET',
-										url : '${pageContext.request.contextPath}/personnel/checkUserIdDuplication.do',
+										url : '${pageContext.request.contextPath}/personnel/checkUserIdDuplication',
 										data : {
 											method : 'checkUserIdDuplication',
 											companyCode : '${sessionScope.companyCode}',
@@ -540,7 +540,7 @@ legend {
 							$
 									.ajax({
 										type : 'GET',
-										url : '${pageContext.request.contextPath}/personnel/checkEmpCodeDuplication.do',
+										url : '${pageContext.request.contextPath}/personnel/checkEmpCodeDuplication',
 										data : {
 											method : 'checkEmpCodeDuplication',
 											companyCode : '${sessionScope.companyCode}',
@@ -577,7 +577,7 @@ legend {
 			// ajax 시작
 			$.ajax({
 				type : 'GET',
-				url : '${pageContext.request.contextPath}/personnel/getNewEmpCode.do',
+				url : '${pageContext.request.contextPath}/personnel/getNewEmpCode',
 				data : {
 					method : 'getNewEmpCode',
 					companyCode : '${sessionScope.companyCode}'
@@ -640,7 +640,7 @@ legend {
 								$
 										.ajax({
 											type : 'POST',
-											url : '${pageContext.request.contextPath}/personnel/batchListProcess.do',
+											url : '${pageContext.request.contextPath}/personnel/batchListProcess',
 											async : false,
 											data : {
 												method : 'batchListProcess',
@@ -670,7 +670,7 @@ legend {
 
 									$
 											.ajax({
-												url : '${pageContext.request.contextPath}/logisticsInfo/imgFileUpload.do?method=imgFileUpload',
+												url : '${pageContext.request.contextPath}/logisticsInfo/imgFileUpload?method=imgFileUpload',
 												enctype : 'multipart/form-data',
 												processData : false,
 												contentType : false,
@@ -694,7 +694,7 @@ legend {
 								$
 										.ajax({
 											type : 'POST',
-											url : '${pageContext.request.contextPath}/personnel/batchListProcess.do',
+											url : '${pageContext.request.contextPath}/personnel/batchListProcess',
 											async : false,
 											data : {
 												method : 'batchListProcess',
@@ -729,7 +729,7 @@ legend {
 								$
 										.ajax({
 											type : 'POST',
-											url : '${pageContext.request.contextPath}/personnel/batchListProcess.do',
+											url : '${pageContext.request.contextPath}/personnel/batchListProcess',
 											async : false,
 											data : {
 												method : 'batchListProcess',
@@ -777,7 +777,7 @@ legend {
 
 		$("#codeGrid").jqGrid({
 
-			url : "${pageContext.request.contextPath}/base/codeList.do",
+			url : "${pageContext.request.contextPath}/base/codeList",
 			datatype : "json",
 			jsonReader : {
 				root : "detailCodeList"
@@ -1170,7 +1170,7 @@ legend {
 													$
 															.ajax({
 																type : 'GET',
-																url : '${pageContext.request.contextPath}/logisticsInfo/searchAddressList.do',
+																url : '${pageContext.request.contextPath}/logisticsInfo/searchAddressList',
 																data : {
 																	method : 'searchAddressList',
 																	sidoName : $(

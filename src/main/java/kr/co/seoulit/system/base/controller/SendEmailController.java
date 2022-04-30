@@ -28,7 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class SendEmailController{
    private Multipart multipart;
 
-   @RequestMapping("/SendEmail.do")
+   @RequestMapping("/SendEmail")
    public ModelAndView sendEmail(HttpServletRequest request, HttpServletResponse response) {
 
       String fileName = "Estimate.jrxml";

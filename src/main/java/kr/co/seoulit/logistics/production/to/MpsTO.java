@@ -1,12 +1,37 @@
 package kr.co.seoulit.logistics.production.to;
 
-import kr.co.seoulit.system.base.to.BaseTO;
-import lombok.Data;
+import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import kr.co.seoulit.system.base.to.BaseTO;
+import kr.co.seoulit.system.common.annotation.Dataset;
+import kr.co.seoulit.system.common.annotation.RemoveColumn;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+@EntityListeners(AuditingEntityListener.class)
 @Data
-public class MpsTO extends BaseTO  {
-	 private String mpsPlanDate;
+@EqualsAndHashCode(callSuper=false)
+@Entity
+@Table(name="MPS")
+@Dataset(name="gds_mps")
+public class MpsTO extends BaseTO implements Persistable<String>  {
+	
+	
+	
+
+	 @Id
 	 private String mpsNo;
+	 private String mpsPlanDate;
 	 private String contractDetailNo;
 	 private String dueDateOfMps;
 	 private String salesPlanNo;
@@ -18,5 +43,27 @@ public class MpsTO extends BaseTO  {
 	 private String unitOfMps;
 	 private String mpsPlanClassification;
 	 private String scheduledEndDate;
+	 
+	 @Transient
+	 private String checked;
+	
+	 @Transient
+	 @RemoveColumn
+	 @CreatedDate
+	  private LocalDateTime createdDate;
+	 
+	 
+   @Override
+public boolean isNew() {
+	// TODO Auto-generated method stub
+	return createdDate==null;
+}
+
+@Override
+public String getId() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 
 }

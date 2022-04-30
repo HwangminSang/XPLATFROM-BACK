@@ -184,7 +184,7 @@
   const workOrderList = () => { 
     workMrpGridOptions.api.setRowData([]);
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', '${pageContext.request.contextPath}/production/getWorkOrderableMrpList.do' +
+    xhr.open('GET', '${pageContext.request.contextPath}/production/getWorkOrderableMrpList' +
         "?method=getWorkOrderableMrpList",
         true)
     xhr.setRequestHeader('Accept', 'application/json');
@@ -318,7 +318,7 @@
       console.log(mrpGatheringNo);
       if (result.isConfirmed) {
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', '${pageContext.request.contextPath}/production/workOrder.do' +
+        xhr.open('POST', '${pageContext.request.contextPath}/production/workOrder' +
             "?method=workOrder"
    			+ "&mrpGatheringNo=" + mrpGatheringNo
    			+ "&mrpNo=" + mrpNo
@@ -408,7 +408,7 @@
   // o get workSiteLog
   const WorkOrderInfoList = () => {  // 작업지시 조회 
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', '${pageContext.request.contextPath}/production/showWorkOrderInfoList.do' +
+    xhr.open('GET', '${pageContext.request.contextPath}/production/showWorkOrderInfoList' +
         "?method=showWorkOrderInfoList",
         true)
     xhr.setRequestHeader('Accept', 'application/json');
@@ -474,7 +474,7 @@
     }).then((result) => {
       if (result.isConfirmed) {
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', '${pageContext.request.contextPath}/production/workOrderCompletion.do' +
+        xhr.open('POST', '${pageContext.request.contextPath}/production/workOrderCompletion' +
             "?method=workOrderCompletion"
             + "&workOrderNo=" + selectedRow.workOrderNo  // 작업지시번호 
             + "&actualCompletionAmount=" + selectedRow.requiredAmount, // 작업완료수량 selectedRow.actualCompletionAmount

@@ -59,7 +59,7 @@
         let markers = [];
 
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', '${pageContext.request.contextPath}/openapi.do' +
+        xhr.open('POST', '${pageContext.request.contextPath}/openapi' +
             "?pageNo=" + '1'
             + "&numOfRows=" + '7'
             + "&startCreateDt=" + startDate

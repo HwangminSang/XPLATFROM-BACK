@@ -570,7 +570,7 @@ function initEvent() {
 			
 			$.ajax({ 
 				type : 'POST',
-				url : '${pageContext.request.contextPath}/material/batchBomListProcess.do' ,
+				url : '${pageContext.request.contextPath}/material/batchBomListProcess' ,
 				async :false,
 				data : {
 					method : 'batchBomListProcess', 
@@ -619,7 +619,7 @@ function showBomGrid() {
 	// ajax 시작
 	$.ajax({ 
 		type : 'GET',
-		url : '${pageContext.request.contextPath}/material/searchBomDeploy.do' ,
+		url : '${pageContext.request.contextPath}/material/searchBomDeploy' ,
 		data : {
 			method : 'searchBomDeploy', 
 			itemCode : $("#itemCodeSearchBox").val() ,
@@ -662,7 +662,7 @@ function showBomInfoGrid() {
 	// ajax 시작
 	$.ajax({ 
 		type : 'GET',
-		url : '${pageContext.request.contextPath}/material/searchBomInfo.do' ,
+		url : '${pageContext.request.contextPath}/material/searchBomInfo' ,
 		data : {
 			method : 'searchBomInfo', 
 			parentItemCode : $("#parentItemCodeSearchBox").val() 
@@ -697,7 +697,7 @@ function showCodeDialogForInput(source, devisionCodeNo, detailCodeName){
 	
 	$("#codeGrid").jqGrid({
 		
-            url:"${pageContext.request.contextPath}/base/codeList.do",
+            url:"${pageContext.request.contextPath}/base/codeList",
             datatype: "json",
             jsonReader: { root: "detailCodeList" },
             postData: { 
@@ -750,7 +750,7 @@ function showCodeDialog(grid, rowid, iCol, divisionCodeNo, title){
 	
 	$("#codeGrid").jqGrid({
 		
-            url:"${pageContext.request.contextPath}/base/codeList.do",
+            url:"${pageContext.request.contextPath}/base/codeList",
             datatype: "json",
             jsonReader: { root: "detailCodeList" },
             getData: { 

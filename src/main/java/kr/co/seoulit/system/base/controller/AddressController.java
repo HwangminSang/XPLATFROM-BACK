@@ -24,7 +24,7 @@ public class AddressController{
 	@Autowired
 	private BaseServiceFacade baseSF;
 
-	@RequestMapping(value="/searchAddressList.do", method=RequestMethod.POST)
+	@RequestMapping(value="/searchAddressList", method=RequestMethod.POST)
 	public ModelAndView searchAddressList(HttpServletRequest request) {
 
 		String sidoName = request.getParameter("sidoName");

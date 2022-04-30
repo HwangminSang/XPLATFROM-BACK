@@ -604,7 +604,7 @@ function initEvent() {
 			
 			$.ajax({ 
 				type : 'POST',
-				url : '${pageContext.request.contextPath}/logisticsInfo/batchListProcess.do' ,
+				url : '${pageContext.request.contextPath}/logisticsInfo/batchListProcess' ,
 				async :false,
 				data : {
 					method : 'batchListProcess', 
@@ -741,7 +741,7 @@ function initEvent() {
 			
 			$.ajax({ 
 				type : 'POST',
-				url : '${pageContext.request.contextPath}/logisticsInfo/batchListProcess.do' ,
+				url : '${pageContext.request.contextPath}/logisticsInfo/batchListProcess' ,
 				async :false,
 				data : {
 					method : 'batchListProcess', 
@@ -795,7 +795,7 @@ function showCodeGrid() {
 
 	$.ajax({ 
 		type : 'GET',
-		url : '${pageContext.request.contextPath}/base/searchCodeList.do' ,
+		url : '${pageContext.request.contextPath}/base/searchCodeList' ,
 		async :false,
 		data : {
 			method : 'findCodeList'
@@ -860,7 +860,7 @@ function showCodeDetailGrid() {
 	
 	$.ajax({ 
 		type : 'POST',
-		url : '${pageContext.request.contextPath}/base/searchCodeList.do' ,
+		url : '${pageContext.request.contextPath}/base/searchCodeList' ,
 		async :false,
 		data : {
 			method : 'findDetailCodeList',
@@ -948,7 +948,7 @@ function showNewCodeInputDialog() {
 				
 				$.ajax({ 
 					type : 'POST',
-					url : '${pageContext.request.contextPath}/logisticsInfo/batchListProcess.do' ,
+					url : '${pageContext.request.contextPath}/logisticsInfo/batchListProcess' ,
 					async :false,
 					data : {
 						method : 'batchListProcess', 

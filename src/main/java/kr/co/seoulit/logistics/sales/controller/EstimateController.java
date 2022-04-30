@@ -2,106 +2,102 @@ package kr.co.seoulit.logistics.sales.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.tobesoft.xplatform.data.PlatformData;
 
+import kr.co.seoulit.logistics.sales.mapper.SalesPlanDAO;
 import kr.co.seoulit.logistics.sales.serviceFacade.SalesServiceFacade;
 import kr.co.seoulit.logistics.sales.to.EstimateDetailTO;
 import kr.co.seoulit.logistics.sales.to.EstimateTO;
-
+import kr.co.seoulit.system.common.mapper.DatasetBeanMapper;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+@AllArgsConstructor
 @RestController
 @RequestMapping("/sales/*")
 public class EstimateController{
-	// serviceFacade 참조변수 선언
-	@Autowired
-	private SalesServiceFacade salesSF;
-	// GSON 라이브러리
-	private static Gson gson = new GsonBuilder().serializeNulls().create(); // 속성값이 null 인 속성도 json 변환
+	
+	
+	private final SalesServiceFacade salesServiceFacade;
 
-	@RequestMapping(value="/searchEstimate.do", method=RequestMethod.GET)
-	public ModelAndView searchEstimateInfo(HttpServletRequest request) {
+	private final DatasetBeanMapper datasetBeanMapper;
+	
+	//견적조회
+	@RequestMapping(value="/searchEstimate")
+	public void searchEstimateInfo(@RequestAttribute("reqData") PlatformData reqData ,
+			                       @RequestAttribute("resData") PlatformData resData) throws Exception {
 
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
-		String dateSearchCondition = request.getParameter("dateSearchCondition");
-
-		HashMap<String, Object> map = new HashMap<>();
-		ArrayList<EstimateTO> estimateTOList = salesSF.getEstimateList(dateSearchCondition, startDate, endDate);
-
-		map.put("gridRowJson", estimateTOList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-
-		return new ModelAndView("jsonView",map);
-	}
-
-	@RequestMapping(value= "/searchEstimateDetailInfo.do", method=RequestMethod.GET)
-	public ModelAndView searchEstimateDetailInfo(HttpServletRequest request) {
-
-		String estimateNo = request.getParameter("estimateNo");
-
-		HashMap<String, Object> map = new HashMap<>();
-		ArrayList<EstimateDetailTO> estimateDetailTOList = salesSF.getEstimateDetailList(estimateNo);
-
-		map.put("gridRowJson", estimateDetailTOList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-
-		return new ModelAndView("jsonView",map);
-	}
-
-	@RequestMapping(value="/addNewEstimate.do", method=RequestMethod.POST)
-	public ModelAndView addNewEstimate(HttpServletRequest request) {
-
-		String estimateDate = request.getParameter("estimateDate");
-		System.out.println("            estimateDate : " + estimateDate); //견적일자
-		String newEstimateInfo = request.getParameter("newEstimateInfo"); //견적과 견적상세의 데이터값의 배열
-		System.out.println("            newEstimateInfo : " + newEstimateInfo);
-		EstimateTO newEstimateTO = gson.fromJson(newEstimateInfo, EstimateTO.class);
-		// newEstimateInfo 는 뷰단에서 보낸 json 문자열 => 문자열을 자바 객체로 변환
-
-		HashMap<String, Object> map = new HashMap<>();
-		System.out.println(estimateDate+"******"+newEstimateTO);
-		HashMap<String, Object> resultList = salesSF.addNewEstimate(estimateDate, newEstimateTO);
-		System.out.println(estimateDate+"%%%%%%"+newEstimateTO);
+		                             //name=dateSearchCondition 변수이름으로 찾는다
+		String dateSearchCondition = reqData.getVariable("dateSearchCondition").getString();  //value 값을 찾아옴
+		String startDate = reqData.getVariable("startDate").getString();
+		String endDate = reqData.getVariable("endDate").getString();
+					
+		ArrayList<EstimateTO> estimateTOList = salesServiceFacade.getEstimateList(dateSearchCondition, startDate, endDate);
+		ArrayList<EstimateDetailTO> estimateDetailTOList = new ArrayList<>();
 		
-		//견적일자와 견적,견적상세의 json객체를 EstimateTO로 변환한 newEstimateTO를 map에 담음
-		map.put("result", resultList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-
-		return new ModelAndView("jsonView",map);
+		for(EstimateTO estimate : estimateTOList) {
+			for(EstimateDetailTO estimateDetailList : estimate.getEstimateDetailTOList()) {
+				estimateDetailTOList.add(estimateDetailList);
+			}
+		}
+		
+		datasetBeanMapper.beansToDataset(resData, estimateTOList, EstimateTO.class);
+		datasetBeanMapper.beansToDataset(resData, estimateDetailTOList, EstimateDetailTO.class);
 	}
 
-	@RequestMapping(value="/batchEstimateDetailListProcess.do", method= RequestMethod.POST)
-	public ModelAndView batchListProcess(HttpServletRequest request) {
+	
+//견적추가
+	@RequestMapping(value="/addNewEstimate")
+	public void addNewEstimate(@RequestAttribute("reqData") PlatformData reqData ,
+			                   @RequestAttribute("resData") PlatformData resData) throws Exception {
 
-		String batchList = request.getParameter("batchList");
-		//batchList안의 객체들마다 estimateNo를 지정해주거나
-		String estimateNo = request.getParameter("estimateNo");
-		//request parameter로 estimateNo를 인자값으로 줘도 됨
-		ArrayList<EstimateDetailTO> estimateDetailTOList = gson.fromJson(batchList,
-				new TypeToken<ArrayList<EstimateDetailTO>>() {
-				}.getType());
+	
+		EstimateTO newEstimateTO = datasetBeanMapper.datasetToBean(reqData, EstimateTO.class); //dataset을 to객체로
+		List<EstimateDetailTO> newEstimateDeatailTO = datasetBeanMapper.datasetToBeans(reqData, EstimateDetailTO.class);
 
-		HashMap<String, Object> map = new HashMap<>();
-		HashMap<String, Object> resultList = salesSF.batchEstimateDetailListProcess(estimateDetailTOList,estimateDetailTOList.get(0).getEstimateNo());
+		String estimateDate = newEstimateTO.getEstimateDate();
+	
+		newEstimateTO.setEstimateDetailTOList(newEstimateDeatailTO); // 일 대 다 관계
 
-		map.put("result", resultList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-		return new ModelAndView("jsonView",map);
+		//견적번호와 견적상세번호를 담은 MAP
+		HashMap<String, Object> resultList = salesServiceFacade.addNewEstimate(estimateDate, newEstimateTO);
+		
+		//객체를 beanToDataset에 넣어줘야하기떄문에 새로 만들어서 처리. <견적번호> 를 set해준다.
+		EstimateTO estimateTO = new EstimateTO();
+		estimateTO.setEstimateNo(resultList.get("newEstimateNo").toString());
+		
+		
+		resData.getVariableList().add("EstimateDtNo", resultList.get("INSERT").toString());
+		datasetBeanMapper.beanToDataset(resData, estimateTO, EstimateTO.class);	
+		
+	}
+   
+	//일괄저장
+	@RequestMapping(value="/batchEstimateDetailListProcess")
+	public void batchEstimateDetailListProcess(@RequestAttribute("reqData")PlatformData reqData) throws Exception {
+
+		
+		
+		
+		ArrayList<EstimateDetailTO> estimateDetailList 
+				= (ArrayList<EstimateDetailTO>) datasetBeanMapper.datasetToBeans(reqData, EstimateDetailTO.class);
+				
+		HashMap<String, Object> resultList = salesServiceFacade.batchEstimateDetailListProcess(estimateDetailList);
+	
 	}
 
 }

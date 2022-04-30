@@ -221,7 +221,7 @@
     console.log(fromDate.value);
     console.log(toDate.value);
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', '${pageContext.request.contextPath}/material/getOrderList.do' +
+    xhr.open('GET', '${pageContext.request.contextPath}/material/getOrderList' +
         "?method=getOrderList"
         + "&startDate=" + fromDate.value
         + "&endDate=" + toDate.value,
@@ -268,10 +268,12 @@
       Swal.fire("알림", "선택한 행이 없습니다.", "info");
       return;
     }
+    mrpGatheringNoList = [];
     selectedRows.forEach(function(selectedRow, index) {
       console.log(selectedRow);
       mrpGatheringNoList.push(selectedRow.mrpGatheringNo);
     });
+    console.log(mrpGatheringNoList);
     _setOrderModal();
     getOrderModal(mrpGatheringNoList);
     $("#orderModal").modal('show');
@@ -285,7 +287,7 @@
       return;
     }
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', '${pageContext.request.contextPath}/material/order.do' +
+    xhr.open('POST', '${pageContext.request.contextPath}/material/order' +
         "?method=order"
         + "&mrpGatheringNoList=" + encodeURI(JSON.stringify(mrpGatheringNoList)),
         true)
@@ -356,7 +358,7 @@
             Swal.fire("알림", "발주할 품목과 품목의 개수를 입력하셔야합니다.", "info");
             return;
           }
-          return fetch(`${pageContext.request.contextPath}/material/optionOrder.do?method=optionOrder`
+          return fetch(`${pageContext.request.contextPath}/material/optionOrder?method=optionOrder`
               + '&itemCode=' + itemCode.value
               + '&itemAmount=' + itemAmount.value, {
             method: 'POST',

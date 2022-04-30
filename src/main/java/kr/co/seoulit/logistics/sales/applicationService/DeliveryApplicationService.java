@@ -7,7 +7,7 @@ import java.util.List;
 import kr.co.seoulit.logistics.sales.to.DeliveryInfoTO;
 
 public interface DeliveryApplicationService{
-	public ArrayList<DeliveryInfoTO> getDeliveryInfoList();
+	public ArrayList<DeliveryInfoTO> getDeliveryInfoList(HashMap<String, String> map);
 
 	public HashMap<String, Object> batchDeliveryListProcess(List<DeliveryInfoTO> deliveryTOList);
 

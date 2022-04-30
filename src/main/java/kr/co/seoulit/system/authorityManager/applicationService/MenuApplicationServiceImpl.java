@@ -6,19 +6,23 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.system.authorityManager.dao.MenuAuthorityDAO;
-import kr.co.seoulit.system.authorityManager.dao.MenuDAO;
+import kr.co.seoulit.hr.affair.mapper.EmpSearchingDAO;
+import kr.co.seoulit.hr.affair.mapper.EmployeeSecretDAO;
+import kr.co.seoulit.system.authorityManager.mapper.AuthorityGroupDAO;
+import kr.co.seoulit.system.authorityManager.mapper.MenuAuthorityDAO;
+import kr.co.seoulit.system.authorityManager.mapper.MenuDAO;
 import kr.co.seoulit.system.authorityManager.to.MenuAuthorityTO;
 import kr.co.seoulit.system.authorityManager.to.MenuTO;
-
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @Component
 public class MenuApplicationServiceImpl implements MenuApplicationService {
 
 	
-	@Autowired
-	private MenuAuthorityDAO menuAuthorityDAO;
-	@Autowired
-	private MenuDAO menuDAO;
+	
+	private final MenuAuthorityDAO menuAuthorityDAO;
+	
+	private final MenuDAO menuDAO;
 		
 	
 	public void insertMenuAuthority(String authorityGroupCode, ArrayList<MenuAuthorityTO> menuAuthorityTOList) {

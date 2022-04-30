@@ -7,6 +7,7 @@ import kr.co.seoulit.hr.affair.to.EmpInfoTO;
 import kr.co.seoulit.hr.affair.to.EmployeeBasicTO;
 import kr.co.seoulit.hr.affair.to.EmployeeDetailTO;
 import kr.co.seoulit.hr.affair.to.EmployeeSecretTO;
+import kr.co.seoulit.hr.affair.to.EmployeeTO;
 
 public interface AffairServiceFacade {
 
@@ -28,5 +29,8 @@ public interface AffairServiceFacade {
 
 	public void updateEmpImg(EmployeeDetailTO employeeDetailTO);
 	
+	public ArrayList<EmployeeTO> getEmployeeList();
 	
+	public void batchEmpInfo(EmployeeTO employee);
+		
 }

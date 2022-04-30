@@ -418,7 +418,7 @@
             let dateApply = isChecked ? "searchByDate" : "searchByCustomer";
             contractInfoGridOptions.api.setRowData([]);
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', '${pageContext.request.contextPath}/sales/searchContract.do' +
+            xhr.open('GET', '${pageContext.request.contextPath}/sales/searchContract' +
                 "?method=searchContract"
                 + "&startDate=" + fromDate.value
                 + "&endDate=" + toDate.value
@@ -558,7 +558,7 @@
             getRowIdValue = selectedNodes[0].data.contractNo;
             
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', '${pageContext.request.contextPath}/sales/searchContractDetail.do' +
+            xhr.open('GET', '${pageContext.request.contextPath}/sales/searchContractDetail' +
                 "?method=searchContractDetail"
                 + "&contractNo=" + getRowIdValue,
                 true)

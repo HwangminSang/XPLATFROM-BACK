@@ -690,7 +690,7 @@ function initEvent() {
 			
 			$.ajax({ 
 				type : 'POST',
-				url : '${pageContext.request.contextPath}/basicInfo/batchCustomerListProcess.do' ,
+				url : '${pageContext.request.contextPath}/basicInfo/batchCustomerListProcess' ,
 				async :false,
 				data : {
 					method : 'batchListProcess', 
@@ -799,7 +799,7 @@ function initEvent() {
 			
 			$.ajax({ 
 				type : 'POST',
-				url : '${pageContext.request.contextPath}/basicInfo/batchFinancialAccountAssociatesListProcess.do' ,
+				url : '${pageContext.request.contextPath}/basicInfo/batchFinancialAccountAssociatesListProcess' ,
 				async :false,
 				data : {
 					method : 'batchListProcess', 
@@ -873,7 +873,7 @@ function showCustomerGrid() {
 
 	$.ajax({ 
 		type : 'POST',
-		url : '${pageContext.request.contextPath}/basicInfo/searchCustomer.do' ,
+		url : '${pageContext.request.contextPath}/basicInfo/searchCustomer' ,
 		async :false,
 		data : {
 			method : 'searchCustomerList' ,
@@ -905,7 +905,7 @@ function showFinancialAccountGrid() {
 
 	$.ajax({ 
 		type : 'POST',
-		url : '${pageContext.request.contextPath}/basicInfo/searchFinancialAccountAssociatesList.do' ,
+		url : '${pageContext.request.contextPath}/basicInfo/searchFinancialAccountAssociatesList' ,
 		async :false,
 		data : {
 			method : 'searchFinancialAccountAssociatesList' ,
@@ -946,7 +946,7 @@ function showCodeDialog(grid, rowid, iCol, divisionCodeNo, title) {
 
 	$("#codeGrid").jqGrid({
 
-		url : "${pageContext.request.contextPath}/base/codeList.do",
+		url : "${pageContext.request.contextPath}/base/codeList",
 		datatype : "json",
 		jsonReader : {
 			root : "detailCodeList"
@@ -1168,7 +1168,7 @@ function showAddressDialog(grid, gridName, rowid, iCol){
 				
 				$.ajax({ 
 					type : 'POST',
-					url : '${pageContext.request.contextPath}/logisticsInfo/searchAddressList.do' ,
+					url : '${pageContext.request.contextPath}/logisticsInfo/searchAddressList' ,
 					data : {
 						method : 'searchAddressList' ,
 						sidoName : $("#searchSidoNameBox").val(),  // 주소 검색시 시도 선택값

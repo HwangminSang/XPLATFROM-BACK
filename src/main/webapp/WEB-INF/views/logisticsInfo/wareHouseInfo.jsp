@@ -119,7 +119,7 @@
 		$.ajax({
 			
 			type : 'GET',
-			url : '${pageContext.request.contextPath}/material/searchStockList.do',
+			url : '${pageContext.request.contextPath}/material/searchStockList',
 			data : {
 				method : 'searchStockList', 
 			},
@@ -145,7 +145,7 @@
 	$('#showWarehouseListButton').on("click",function() {
 		$.ajax({
 			   type : 'GET',
-			   url : '${pageContext.request.contextPath}/logisticsInfo/warehouseInfo.do',
+			   url : '${pageContext.request.contextPath}/logisticsInfo/warehouseInfo',
 			   data : {
 			    method : "getWarehouseList",
 			   },

@@ -5,22 +5,57 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.logistics.sales.dao.DeliveryDAO;
+import kr.co.seoulit.logistics.sales.mapper.ContractDAO;
+import kr.co.seoulit.logistics.sales.mapper.ContractDetailDAO;
+import kr.co.seoulit.logistics.sales.mapper.DeliveryDAO;
+import kr.co.seoulit.logistics.sales.repository.ContractDetailRepository;
+import kr.co.seoulit.logistics.sales.repository.ContractRepository;
+import kr.co.seoulit.logistics.sales.repository.DeliveryInfoRepository;
+import kr.co.seoulit.logistics.sales.repository.EstimateRepository;
 import kr.co.seoulit.logistics.sales.to.DeliveryInfoTO;
+import lombok.AllArgsConstructor;
 
+
+
+@AllArgsConstructor
 @Component
 public class DeliveryApplicationServiceImpl implements DeliveryApplicationService {
 
-	@Autowired
-	private DeliveryDAO deliveryDAO;
+	
+	private final DeliveryDAO deliveryDAO;
 
+	
+	private final DeliveryInfoRepository deliveryInfoRepository;
 	@Override
-	public ArrayList<DeliveryInfoTO> getDeliveryInfoList() {
-		ArrayList<DeliveryInfoTO> deliveryInfoList = null;
-		deliveryInfoList = deliveryDAO.selectDeliveryInfoList();
-		return deliveryInfoList;
+	public ArrayList<DeliveryInfoTO> getDeliveryInfoList(HashMap<String, String> map) {
+		
+		ArrayList<DeliveryInfoTO> deliveryInfoList=null;
+		 HashMap<String,String> maplist=new HashMap<>();
+		String searchCondition=map.get("searchCondition");
+		
+		if(searchCondition.equals("searchByDate")){
+		 
+        
+         maplist.put("startDate",map.get("startDate"));
+          maplist.put("endDate",map.get("endDate"));
+                
+     deliveryInfoList=deliveryDAO.selectDeliveryInfoListByDeliverydate(maplist);
+	   
+	   }else if(searchCondition.equals("searchByDate")){
+		 
+  deliveryInfoList=deliveryInfoRepository.findAllByCustomerCodeOrderByDeliveryDateDesc(map.get("customerCode"));
+		   
+	   }else {
+		
+		// DB 테이블의 컬럼명이 아니니 주의할 것. 엔티티 칼럼명 넣어야한다.
+		deliveryInfoList=deliveryInfoRepository.findAll(Sort.by(Sort.Direction.DESC, "deliveryDate"));
+		
+	   }
+		
+	   return deliveryInfoList;
 	}
 
 	@Override
@@ -75,8 +110,10 @@ public class DeliveryApplicationServiceImpl implements DeliveryApplicationServic
 		return resultMap;
 	}
 
-	@Override
+	@Override //납품 
 	public HashMap<String,Object> deliver(String contractDetailNo) {
+		
+		//jpa 미구현 - procedure 호출
         HashMap<String, String> map = new HashMap<>();
 		map.put("contractDetailNo", contractDetailNo);
 		
@@ -85,6 +122,7 @@ public class DeliveryApplicationServiceImpl implements DeliveryApplicationServic
 		HashMap<String, Object> resultMap = new HashMap<>();
 		resultMap.put("errorCode", map.get("ERROR_CODE"));
 		resultMap.put("errorMsg", map.get("ERROR_MSG"));
+		
 		return resultMap;
 	}
 	

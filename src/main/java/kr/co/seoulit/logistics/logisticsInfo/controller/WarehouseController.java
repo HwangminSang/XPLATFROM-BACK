@@ -1,14 +1,11 @@
 package kr.co.seoulit.logistics.logisticsInfo.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,19 +17,21 @@ import com.google.gson.GsonBuilder;
 import kr.co.seoulit.logistics.logisticsInfo.serviceFacade.LogisticsInfoServiceFacade;
 import kr.co.seoulit.logistics.logisticsInfo.to.WarehouseTO;
 
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @RestController
 @RequestMapping("/logisticsInfo/*")
 public class WarehouseController{
 	// serviceFacade 참조변수 선언
-	@Autowired
-	private LogisticsInfoServiceFacade logisticsSF;
+	
+	private final LogisticsInfoServiceFacade logisticsInfoServiceFacade;
 	// GSON 라이브러리
 	private static Gson gson = new GsonBuilder().serializeNulls().create(); // 속성값이 null 인 속성도 json 변환
 
-	@RequestMapping(value = "/warehouseInfo.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/warehouseInfo", method = RequestMethod.GET)
 	public ModelAndView getWarehouseList() {
 		HashMap<String, Object> map = new HashMap<>();
-		ArrayList<WarehouseTO> WarehouseTOList = logisticsSF.getWarehouseInfoList();
+		ArrayList<WarehouseTO> WarehouseTOList = logisticsInfoServiceFacade.getWarehouseInfoList();
 		map.put("gridRowJson", WarehouseTOList);
 		map.put("errorCode", 1);
 		map.put("errorMsg", "성공");

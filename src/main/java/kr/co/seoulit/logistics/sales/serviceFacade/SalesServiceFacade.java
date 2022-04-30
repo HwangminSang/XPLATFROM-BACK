@@ -22,13 +22,14 @@ public interface SalesServiceFacade {
 	
 	public HashMap<String, Object> addNewEstimate(String estimateDate, EstimateTO newEstimateTO);
 
-	public HashMap<String, Object> batchEstimateDetailListProcess(ArrayList<EstimateDetailTO> estimateDetailTOList,String estimateNo);	
+	public HashMap<String, Object> batchEstimateDetailListProcess(ArrayList<EstimateDetailTO> estimateDetailTOList);	
 	
+	public ArrayList<ContractInfoTO> getContractListByCondition(HashMap<String, String> map);
 	
 	// ContractApplicationServiceImpl
 	public ArrayList<ContractInfoTO> getContractList(String searchCondition, String[] paramArray);
 
-	public ArrayList<ContractInfoTO> getDeliverableContractList(String searchCondition, String[] paramArray);
+	public ArrayList<ContractInfoTO> getDeliverableContractList(HashMap<String, String> map);
 	
 	public ArrayList<ContractDetailTO> getContractDetailList(String estimateNo);
 	
@@ -50,6 +51,6 @@ public interface SalesServiceFacade {
 
 	public HashMap<String, Object> deliver(String contractDetailNo);
 	
-	public ArrayList<DeliveryInfoTO> getDeliveryInfoList();
+	public ArrayList<DeliveryInfoTO> getDeliveryInfoList(HashMap<String, String> map);
 	
 }

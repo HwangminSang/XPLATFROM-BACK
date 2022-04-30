@@ -275,7 +275,7 @@ function initEvent() {
 		// ajax 시작
 		$.ajax({ 
 			type : 'GET',
-			url : '${pageContext.request.contextPath}/production/searchMrpGathering.do' ,
+			url : '${pageContext.request.contextPath}/production/searchMrpGathering' ,
 			data : {
 				method : 'searchMrpGathering', 
 				mrpGatheringStartDate : $("#mrpGatheringStartDatePicker").val() ,

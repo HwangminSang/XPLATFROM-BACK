@@ -1,9 +1,11 @@
 package kr.co.seoulit.logistics.material.to;
 
+import kr.co.seoulit.system.common.annotation.Dataset;
 import kr.co.seoulit.system.base.to.BaseTO;
 import lombok.Data;
 
 @Data
+@Dataset(name="gds_bomDeploy")
 public class BomDeployTO extends BaseTO {
 	
 	private String bomNo;

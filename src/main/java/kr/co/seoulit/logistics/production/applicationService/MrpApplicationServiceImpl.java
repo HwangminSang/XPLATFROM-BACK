@@ -1,35 +1,61 @@
 package kr.co.seoulit.logistics.production.applicationService;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
+import java.util.Optional;
 import java.util.TreeSet;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.logistics.production.dao.MpsDAO;
-import kr.co.seoulit.logistics.production.dao.MrpDAO;
-import kr.co.seoulit.logistics.production.dao.MrpGatheringDAO;
+
+import kr.co.seoulit.logistics.production.mapper.MrpDAO;
+import kr.co.seoulit.logistics.production.mapper.MrpGatheringDAO;
+import kr.co.seoulit.logistics.production.repository.MpsRepository;
+import kr.co.seoulit.logistics.production.repository.MrpGatheringRepository;
+import kr.co.seoulit.logistics.production.repository.MrpRepository;
+import kr.co.seoulit.logistics.production.to.MpsTO;
 import kr.co.seoulit.logistics.production.to.MrpGatheringTO;
 import kr.co.seoulit.logistics.production.to.MrpInsertInfoTO;
 import kr.co.seoulit.logistics.production.to.MrpTO;
 import kr.co.seoulit.logistics.production.to.OpenMrpTO;
 
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @Component
 public class MrpApplicationServiceImpl implements MrpApplicationService {
 	// DAO 참조변수 선언
-	@Autowired
-	private MpsDAO mpsDAO;
-	@Autowired
-	private MrpDAO mrpDAO;
-	@Autowired
-	private MrpGatheringDAO mrpGatheringDAO;
 
+	    
+	private final MrpDAO mrpDAO;
+
+	private final  MrpGatheringDAO mrpGatheringDAO;
+
+	private final  MrpRepository mrpRepository;
+
+	private final  MpsRepository mpsRepository;
+
+	private final  MrpGatheringRepository mrpGatheringRepository;
+
+
+	
+	//소요량전개등록후 만들어지는 테이블을 가져옴. 왜? 소요량 취합을 하기위해서  <MRP>테이블 . 
 	public ArrayList<MrpTO> searchMrpList(String mrpGatheringStatusCondition) {
-		HashMap<String, String> map = new HashMap<>();
-		map.put("mrpGatheringStatusCondition", mrpGatheringStatusCondition);
-		return mrpDAO.selectMrpListAll(map);
+
+	
+		ArrayList<MrpTO> mrpList = null;  
+		if(mrpGatheringStatusCondition.equals("null")) //초기값은 NULL
+			mrpList = mrpRepository.findByMrpGatheringStatusIsNullOrderByMrpNo();//소요량 취합전 null
+		else
+			mrpList = mrpRepository.findByMrpGatheringStatusIsNotNullOrderByMrpNo(); //소요량 취합후
+		
+	
+		
+		return mrpList; 
 	}
 
 	public ArrayList<MrpTO> searchMrpList(String dateSearchCondtion, String startDate, String endDate) {
@@ -48,63 +74,83 @@ public class MrpApplicationServiceImpl implements MrpApplicationService {
 		return mrpList;
 	}
 
+	
+	
 	public ArrayList<MrpGatheringTO> searchMrpGatheringList(String dateSearchCondtion, String startDate,
 			String endDate) {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("searchDateCondition", dateSearchCondtion);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
-		ArrayList<MrpGatheringTO> mrpGatheringList = null;
-		mrpGatheringList = mrpGatheringDAO.selectMrpGatheringList(map);
+	
+		map.put("startDate", startDate.substring(2));
+		map.put("endDate", endDate.substring(2));
+		
+		
+	
+	
+		 ArrayList<MrpGatheringTO> mrpGatheringList = mrpGatheringDAO.selectMrpGatheringList(map);
 
-		for (MrpGatheringTO bean : mrpGatheringList) {
-
-			bean.setMrpTOList(mrpDAO.selectMrpListAsMrpGatheringNo(bean.getMrpGatheringNo()));
-
-		}
+		
 		return mrpGatheringList;
 
 	}
 
 	public HashMap<String, Object> openMrp(ArrayList<String> mpsNoArr) {
+		
+		// jpa 미구현 - procedure 호출
 		String mpsNoList = mpsNoArr.toString().replace("[", "").replace("]", "");
 		HashMap<String,Object> params=new HashMap<>();
-		params.put("mpsNoList", mpsNoList);
+		params.put("mpsNoList", mpsNoList); 
 		mrpDAO.openMrp(params);
+		
+			 
 		@SuppressWarnings("unchecked")
 		ArrayList<OpenMrpTO> openMrpList=(ArrayList<OpenMrpTO>) params.get("RESULT");
+		
 		HashMap<String,Object> resultMap = new HashMap<>();
 		resultMap.put("gridRowJson", openMrpList);
 		resultMap.put("errorCode",params.get("ERROR_CODE"));
 	    resultMap.put("errorMsg", params.get("ERROR_MSG"));
+	    
 		return resultMap;
 	}
 
-	public HashMap<String, Object> registerMrp(String mrpRegisterDate, ArrayList<String> mpsList) {
+	
+	//쇼요량전개된것 등록
+	public HashMap<String, Object> registerMrp(String mrpRegisterDate, String mpsNoList) {
 
+		// jpa 미구현 - procedure 호출
 		HashMap<String,Object> resultMap = new HashMap<>();
 		HashMap<String,Object> params=new HashMap<>();
-	    params.put("mrpRegisterDate",mrpRegisterDate);
+			params.put("mrpRegisterDate",mrpRegisterDate);
+			
 	    mrpDAO.insertMrpList(params);
-	    ArrayList<MrpInsertInfoTO> list= (ArrayList<MrpInsertInfoTO>) params.get("RESULT");
-	    MrpInsertInfoTO mit = list.get(0);
 	    
-		resultMap.put("firstMrpNo",mit.getFirstMrpNo());
-	    resultMap.put("lastMrpNo", mit.getLastMrpNo());
-	    resultMap.put("length", mit.getLength());
+	    // params.get("RESULT") = MrpInsertInfoTO(firstMrpNo=RP20211007-019, lastMrpNo=RP20211007-027, length=10)
+	    @SuppressWarnings("unchecked")
+	    MrpInsertInfoTO mi= ((ArrayList<MrpInsertInfoTO>) params.get("RESULT")).get(0);
+	    
+	    
+		resultMap.put("MrpInsertInfoTO",mi);
+	 
 	    resultMap.put("errorCode",params.get("ERROR_CODE"));
 	    resultMap.put("errorMsg", params.get("ERROR_MSG"));
-	    
-		// MPS 테이블에서 해당 mpsNo 의 MRP 적용상태를 "Y" 로 변경
-		for (String mpsNo : mpsList) {
-			HashMap<String, String> map = new HashMap<>();
-			map.put("mpsNo", mpsNo);
-			map.put("mrpStatus","Y");		
-			mpsDAO.changeMrpApplyStatus(map);
-
-		}
+  	    
+	    //jpa 구현
+	    // MPS 테이블에서 해당 mpsNo 의 MRP 적용상태를 "Y" 로 변경
+	    // 1개만 날라오면 "," 얘가 없더라도 배열로 나눠짐.
+	    String[] SplitMpsNo=mpsNoList.split(",");
+	    for(String mpsNo : SplitMpsNo) {
+         Optional<MpsTO> mpsTO = mpsRepository.findByMpsNo(mpsNo);
+			mpsTO.ifPresent(mpsTOUpdate -> {
+				mpsTOUpdate.setMrpApplyStatus("Y");
+				mpsRepository.save(mpsTOUpdate);
+			});
+	    }
 		return resultMap;
 	}
+	
+	
+	
 
 	public HashMap<String, Object> batchMrpListProcess(ArrayList<MrpTO> mrpTOList) {
 		HashMap<String, Object> resultMap = new HashMap<>();
@@ -158,7 +204,12 @@ public class MrpApplicationServiceImpl implements MrpApplicationService {
 		return resultMap;
 	}
 
+	
+	
+	//소요량 취합 조회
 	public ArrayList<MrpGatheringTO> getMrpGathering(ArrayList<String> mrpNoArr) {
+		// jpa 미구현 - 서브쿼리  <원재료는 구매!!! 여기서 처리!> , 소요량 취합등록을 하지 않은 상태 , mrp 번호는 pk
+		// 커리문 수정 
 		ArrayList<MrpGatheringTO> mrpGatheringList = null;
 		String mrpNoList = mrpNoArr.toString().replace("[", "").replace("]", "");
 		mrpGatheringList = mrpGatheringDAO.getMrpGathering(mrpNoList);
@@ -166,102 +217,113 @@ public class MrpApplicationServiceImpl implements MrpApplicationService {
 
 	}
 
+	
+	
+	//소요량 취합 등록<제일 어려운부분>
 	public HashMap<String, Object> registerMrpGathering(String mrpGatheringRegisterDate, ArrayList<String> mrpNoArr,
-			HashMap<String, String> mrpNoAndItemCodeMap) {
+			HashMap<String, String> mrpNoAndItemCodeMap){
+
 		// 선택한날짜
-
-		HashMap<String, Object> resultMap = null;
-		int seq = 0;
-		ArrayList<MrpGatheringTO> mrpGatheringList = null;
-		// 소요량 취합일자로 새로운 소요량 취합번호 확인
-		int i=1;
-		List<MrpGatheringTO> list= mrpGatheringDAO.selectMrpGatheringCount(mrpGatheringRegisterDate); // 선택한날짜
-		TreeSet<Integer> intSet = new TreeSet<>();
-		for(MrpGatheringTO bean : list) {
-			String mrpGatheringNo = bean.getMrpGatheringNo();
-			int no = Integer.parseInt(mrpGatheringNo.substring(mrpGatheringNo.length() - 2, mrpGatheringNo.length()));
-			intSet.add(no);
-		}
-		if (!intSet.isEmpty()) {
-			i=intSet.pollLast() + 1;
-		}
-		/*
-		 * ( itemCode : 새로운 mrpGathering 일련번호 ) 키/값 Map => itemCode 로 mrpNo 와
-		 * mrpGatheringNo 를 매칭
-		 */
+		HashMap<String, Object> resultMap = new HashMap<>();
+		
 		HashMap<String, String> itemCodeAndMrpGatheringNoMap = new HashMap<>();
+		
+		int seq = 0; 
+		int i=1;
+		
+	
+		// 가장 늦은 mrp 번호를 구해옴(받아온 날짜를 통해)
+		
+		MrpGatheringTO mgt= mrpGatheringDAO.selectMrpGatheringCount(mrpGatheringRegisterDate); 
+		// 이거떄문에 해당날짜의 첫번째가 없으면 nullpoint가 생겼음 그래서 npe체크추가.
+		if(mgt!=null) {
+		   String mrpNumber=mgt.getMrpGatheringNo();
+			i=Integer.parseInt(mrpNumber.substring(mrpNumber.length() - 2, mrpNumber.length()))+1;  // 숫자안 - 제거하기위해
+		}
+			//시퀀스번호 생성
+			seq = mrpGatheringDAO.getMGSeqNo(); 
+			
+	
 
-		// 새로운 mrpGathering 일련번호 양식 생성 : 등록일자 '2020-04-28' => 일련번호 'MG20200428-'
+    	// 새로운 mrpGathering번호를 bean에 입력,mrp_gathering_no IS NULL 인 mrp  
+		ArrayList<MrpGatheringTO> mrpGatheringList = getMrpGathering(mrpNoArr);
+		// 생성된 mrp 일련번호를 저장할 TreeSet
+		TreeSet<String> mrpGatheringNoSet = new TreeSet<>();
+
 		StringBuffer newMrpGatheringNo = new StringBuffer();
 		newMrpGatheringNo.append("MG");
 		newMrpGatheringNo.append(mrpGatheringRegisterDate.replace("-", ""));
 		newMrpGatheringNo.append("-");
 
-		seq = mrpGatheringDAO.getMGSeqNo(); //
+		StringBuffer sb = new StringBuffer();
+		
+		for (MrpGatheringTO bean : mrpGatheringList) { 
+			//jpa 적용 ( 새 소요량취합번호 and 시퀀스 번호 저장)
+			bean.setMrpGatheringNo(newMrpGatheringNo.toString() + String.format("%03d", i++)); //소요량 취합번호
+		  
+			bean.setMrpGatheringSeq(seq); 
+			
+			//MrpGatheringTO(소요량취합TO)에 소요량취합번호<pk> , 시퀀스번호(다같음) 추가해서 등록완료!!!
+			mrpGatheringRepository.save(bean);
 
-		mrpGatheringList = getMrpGathering(mrpNoArr);
-		// 새로운 mrpGathering 빈에 일련번호 입력 / status 를 "INSERT" 로 변경
-		for (MrpGatheringTO bean : mrpGatheringList) { // newMrpGatheringList : 소요량 취합결과 그리드에 뿌려진 데이터값
-			System.out.println("################################ : " + bean.getMrpGatheringNo());
-			bean.setMrpGatheringNo(newMrpGatheringNo.toString() + String.format("%03d", i++));
-			bean.setStatus("INSERT"); // bean 즉, MrpGatheringTO의 클래스주소에 소요량취합번호 + INSERT set
-			bean.setMrpGatheringSeq(seq);
+			
+			
+			//treeset
+			mrpGatheringNoSet.add(bean.getMrpGatheringNo());
+			
+		
+			
 			// mrpGathering 빈의 itemCode 와 mrpGatheringNo 를 키값:밸류값으로 map 에 저장
 			itemCodeAndMrpGatheringNoMap.put(bean.getItemCode(), bean.getMrpGatheringNo());
-
-		}
-
-		// 새로운 mrpGathering 빈을 batchListProcess 로 테이블에 저장, 결과 Map 반환
-		resultMap = batchMrpGatheringListProcess(mrpGatheringList);// 소요량 취합결과 그리드에 뿌려진 데이터값 //소요량취합번호, INSERT 추가됨
-
-		// 생성된 mrp 일련번호를 저장할 TreeSet
-		TreeSet<String> mrpGatheringNoSet = new TreeSet<>();
-
-		// "INSERT_LIST" 목록에 "itemCode - mrpGatheringNo" 키/값 Map 이 있음
-		@SuppressWarnings("unchecked")
-		HashMap<String, String> mrpGatheringNoList = (HashMap<String, String>) resultMap.get("INSERT_MAP");// key(ItemCode):value(소요량취합번호)
-
-		for (String mrpGatheringNo : mrpGatheringNoList.values()) {
-			mrpGatheringNoSet.add(mrpGatheringNo); // mrpGatheringNoList 의 mrpGathering 일련번호들을 TreeSet 에 저장
-
-		}
-
-		resultMap.put("firstMrpGatheringNo", mrpGatheringNoSet.pollFirst()); // 최초 mrpGathering 일련번호를 결과 Map 에 저장
-		resultMap.put("lastMrpGatheringNo", mrpGatheringNoSet.pollLast()); // 마지막 mrpGathering 일련번호를 결과 Map 에 저장
-
-		// MRP 테이블에서 해당 mrpNo 의 mrpGatheringNo 저장, 소요량취합 적용상태를 "Y" 로 변경
-		// itemCode 로 mrpNo 와 mrpGatheringNo 를 매칭시킨다
-		for (String mrpNo : mrpNoAndItemCodeMap.keySet()) {
-			String itemCode = mrpNoAndItemCodeMap.get(mrpNo);
-			String mrpGatheringNo = itemCodeAndMrpGatheringNoMap.get(itemCode);
-			HashMap<String, String> map = new HashMap<>();
-			map.put("mrpNo", mrpNo);
-			map.put("mrpGatheringNo", mrpGatheringNo);
-			map.put("mrpGatheringStatus", "Y");
-			mrpDAO.changeMrpGatheringStatus(map);
-		}
-
-		String mrpNoList = mrpNoArr.toString().replace("[", "").replace("]", "");
-		// MRP 적용상태를 "Y" 로 변경한 MRP 번호들을 결과 Map 에 저장
-		resultMap.put("changeMrpGatheringStatus", mrpNoList);
-
-		StringBuffer sb = new StringBuffer();
-
-		// 사진 캡쳐할려고 코드 분리 시켜놓음, mrpGatheringNoList.values()로 돌리는 첫번째 for문이랑 합쳐야함
-		for (String mrpGatheringNo : mrpGatheringNoList.values()) {
-			sb.append(mrpGatheringNo);
-			sb.append(",");
-		}
-
-		sb.delete(sb.toString().length() - 1, sb.toString().length());
-
-		System.out.println("sb");
-		System.out.println(sb.toString());
 		
-		HashMap<String, String> map = new HashMap<>();
-		map.put("mrpGatheringNo",sb.toString());
-		mrpGatheringDAO.updateMrpGatheringContract(map);
+			sb.append(bean.getMrpGatheringNo());
+			sb.append(",");
+			
+			
+		
+		}
+		
+	
+	    //view단에서 받아옴 map	 mrpNo:itemCode
+		for (String mrpNo : mrpNoAndItemCodeMap.keySet()) {   
+			String itemCode = mrpNoAndItemCodeMap.get(mrpNo);
+			String mrpGatheringNo = itemCodeAndMrpGatheringNoMap.get(itemCode); //새로추가된 mrpGatheringNo 구함 
+	
+			Optional<MrpTO> mrpTO = mrpRepository.findByMrpNo(mrpNo);
+			
+			// 여기서 먼저 mrp테이블에 소요량취합번호를 입력해줘야 아래 수주상세 프로시저에서 mrp 테이블을 이용하여 수주상세에 취합번호등록가능!!
+			
+			mrpTO.ifPresent(mrpTOUpdate -> {
+			mrpTOUpdate.setMrpGatheringNo(mrpGatheringNo);
+				mrpTOUpdate.setMrpGatheringStatus("Y");
+			
+				mrpRepository.save(mrpTOUpdate);
+				
+				
+			
+		
+			
+			});	
+		}
+		
+		
+		//프로시저 !(jpa미적용) 수주상세(contract_detail)에   새로운 소요량취합 (MrpGatheringNo) 번호를 추가
+			
+				sb.delete(sb.toString().length() - 1, sb.toString().length());  // 마지막 , 없앰
+				HashMap<String, String> map = new HashMap<>();
+				map.put("mrpGatheringNo",sb.toString());
+				
+				mrpGatheringDAO.updateMrpGatheringContract(map);   
+				
+				
+				resultMap.put("firstMrpGatheringNo", mrpGatheringNoSet.pollFirst()); // 최초 mrpGathering 일련번호를 결과 Map 에 저장
+		        resultMap.put("lastMrpGatheringNo", mrpGatheringNoSet.pollLast()); // 마지막 mrpGathering 일련번호를 결과 Map 에 저장
+	
+		
 		return resultMap;
+		
+		
+		
 	}
 
 	public HashMap<String, Object> batchMrpGatheringListProcess(ArrayList<MrpGatheringTO> mrpGatheringTOList) {

@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.system.base.dao.BoardDAO;
+import kr.co.seoulit.system.base.mapper.BoardDAO;
 import kr.co.seoulit.system.base.to.BoardFileTO;
 import kr.co.seoulit.system.base.to.BoardTO;
 import kr.co.seoulit.system.base.to.ReplyBoardTO;

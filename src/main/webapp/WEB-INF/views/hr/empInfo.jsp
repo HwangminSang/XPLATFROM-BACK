@@ -735,7 +735,7 @@ legend {
 			// ajax 시작
 			$.ajax({ 
 				type : 'GET',
-				url : '${pageContext.request.contextPath}/personnel/checkUserIdDuplication.do' ,
+				url : '${pageContext.request.contextPath}/personnel/checkUserIdDuplication' ,
 				data : {
 					method : 'checkUserIdDuplication' ,
 					companyCode : '${sessionScope.companyCode}',
@@ -807,7 +807,7 @@ legend {
 				  	var formData = new FormData(form);
 				  	
 					$.ajax({
-						url: '${pageContext.request.contextPath}/logisticsInfo/imgFileUpload.do?method=imgFileUpload',
+						url: '${pageContext.request.contextPath}/logisticsInfo/imgFileUpload?method=imgFileUpload',
 			            //enctype: 'multipart/form-data' ,
 						processData: false,
 						contentType: false,
@@ -827,7 +827,7 @@ legend {
 				
 				$.ajax({ 
 					type : 'POST',
-					url : '${pageContext.request.contextPath}/personnel/batchListProcess.do' ,
+					url : '${pageContext.request.contextPath}/personnel/batchListProcess' ,
 					async :false,
 					data : {
 						method : 'batchListProcess', 
@@ -965,7 +965,7 @@ legend {
 				
 				$.ajax({ 
 					type : 'POST',
-					url : '${pageContext.request.contextPath}/personnel/batchListProcess.do' ,
+					url : '${pageContext.request.contextPath}/personnel/batchListProcess' ,
 					async :false,
 					data : {
 						method : 'batchListProcess', 
@@ -1032,7 +1032,7 @@ legend {
 		// ajax 시작
 		$.ajax({ 
 			type : 'GET',
-			url : '${pageContext.request.contextPath}/personnel/searchAllEmpList.do' ,
+			url : '${pageContext.request.contextPath}/personnel/searchAllEmpList' ,
 			data : {
 				method : 'searchAllEmpList' ,
 				searchCondition : searchConditionValue ,
@@ -1094,7 +1094,7 @@ legend {
 		// ajax 시작
 		$.ajax({ 
 			type : 'POST',
-			url : '${pageContext.request.contextPath}/hr/searchEmpInfo.do' ,
+			url : '${pageContext.request.contextPath}/hr/searchEmpInfo' ,
 			data : {
 				method : 'searchEmpInfo' ,
 				companyCode : lastSelected_empListGrid_RowValue.companyCode,
@@ -1192,7 +1192,7 @@ legend {
 
 		$("#codeGrid").jqGrid({
 
-			url : "${pageContext.request.contextPath}/base/codeList.do",
+			url : "${pageContext.request.contextPath}/base/codeList",
 			datatype : "json",
 			jsonReader : {
 				root : "detailCodeList"
@@ -1442,7 +1442,7 @@ legend {
 					
 					$.ajax({ 
 						type : 'GET',
-						url : '${pageContext.request.contextPath}/logisticsInfo/searchAddressList.do' ,
+						url : '${pageContext.request.contextPath}/logisticsInfo/searchAddressList' ,
 						data : {
 							method : 'searchAddressList' ,
 							sidoName : $("#searchSidoNameBox").val(),  // 주소 검색시 시도 선택값

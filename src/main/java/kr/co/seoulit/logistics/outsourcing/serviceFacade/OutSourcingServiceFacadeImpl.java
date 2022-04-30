@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 
 import kr.co.seoulit.logistics.outsourcing.applicationService.OutSourcingApplicationService;
 import kr.co.seoulit.logistics.outsourcing.to.OutSourcingTO;
+import kr.co.seoulit.system.common.mapper.DatasetBeanMapper;
+import lombok.AllArgsConstructor;
 @Service
+@AllArgsConstructor
 public class OutSourcingServiceFacadeImpl implements OutSourcingServiceFacade{
 		// 참조변수 선언
-		@Autowired
-		private OutSourcingApplicationService outSourcingApplicationService;
+		
+		private final OutSourcingApplicationService outSourcingApplicationService;
 		
 		@Override
 		public ArrayList<OutSourcingTO> searchOutSourcingList(String fromDate, String toDate, String customerCode,String itemCode,String materialStatus) {

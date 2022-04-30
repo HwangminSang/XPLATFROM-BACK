@@ -308,7 +308,7 @@
     console.log(endDate);
     console.log(customerCode);
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', "${pageContext.request.contextPath}/sales/searchDeliverableContractList.do"
+    xhr.open('GET', "${pageContext.request.contextPath}/sales/searchDeliverableContractList"
         + "?method=searchDeliverableContractList"
         + "&searchCondition=" + searchCondition
         + "&startDate=" + startDate
@@ -394,7 +394,7 @@
     }).then((result) => {
       if (result.isConfirmed) {
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', '${pageContext.request.contextPath}/sales/deliver.do' +
+        xhr.open('POST', '${pageContext.request.contextPath}/sales/deliver' +
             "?method=deliver"
             +"&contractDetailNo=" + contractDetailNo,
             true)

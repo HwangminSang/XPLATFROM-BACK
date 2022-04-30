@@ -1,11 +1,13 @@
 package kr.co.seoulit.logistics.production.to;
 
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
 
 @Data
+@Dataset(name="gds_workOrderSimulation")
 public class WorkOrderSimulationTO {
 
-	private String mrpNo;
+	private String mrpNo; 
 	private String mpsNo;
 	private String mrpGatheringNo;
 	private String itemClassification;

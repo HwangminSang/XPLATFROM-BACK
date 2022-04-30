@@ -296,7 +296,7 @@ function initEvent() {
 			
 			$.ajax({ 
 				type : 'POST',
-				url : '${pageContext.request.contextPath}/basicInfo/batchCompanyListProcess.do' ,
+				url : '${pageContext.request.contextPath}/basicInfo/batchCompanyListProcess' ,
 				async :false,
 				data : {
 					method : 'batchListProcess', 
@@ -346,7 +346,7 @@ function showCompanyGrid() {
 
 	$.ajax({ 
 		type : 'GET',
-		url : '${pageContext.request.contextPath}/basicInfo/searchCompany.do' ,
+		url : '${pageContext.request.contextPath}/basicInfo/searchCompany' ,
 		async :false,
 		data : {
 			method : 'searchCompanyList'
@@ -527,7 +527,7 @@ function showAddressDialog(grid, rowid, iCol){
 				
 				$.ajax({ 
 					type : 'GET',
-					url : '${pageContext.request.contextPath}/logisticsInfo/searchAddressList.do' ,
+					url : '${pageContext.request.contextPath}/logisticsInfo/searchAddressList' ,
 					data : {
 						method : 'searchAddressList' ,
 						sidoName : $("#searchSidoNameBox").val(),  // 주소 검색시 시도 선택값

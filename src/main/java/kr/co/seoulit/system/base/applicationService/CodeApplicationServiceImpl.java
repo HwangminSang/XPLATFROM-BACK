@@ -2,14 +2,14 @@ package kr.co.seoulit.system.base.applicationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.system.base.dao.CodeDAO;
-import kr.co.seoulit.system.base.dao.CodeDetailDAO;
+import kr.co.seoulit.system.base.mapper.CodeDAO;
+import kr.co.seoulit.system.base.mapper.CodeDetailDAO;
+import kr.co.seoulit.system.base.repository.CodeDetailRepository;
 import kr.co.seoulit.system.base.to.CodeDetailTO;
 import kr.co.seoulit.system.base.to.CodeTO;
 
@@ -20,6 +20,8 @@ public class CodeApplicationServiceImpl implements CodeApplicationService {
 	private CodeDAO codeDAO;
 	@Autowired
 	private CodeDetailDAO codeDetailDAO;
+	@Autowired
+	private CodeDetailRepository codeDetailRepository;
 	
 	@Override
 	public ArrayList<CodeTO> getCodeList() {
@@ -29,7 +31,7 @@ public class CodeApplicationServiceImpl implements CodeApplicationService {
 
 		for (CodeTO bean : codeList) {
 
-			bean.setCodeDetailTOList(codeDetailDAO.selectDetailCodeList(bean.getDivisionCodeNo()));
+			bean.setCodeDetailTOList(codeDetailRepository.findByDivisionCodeNoLike(bean.getDivisionCodeNo()));
 
 		}
 		return codeList;
@@ -37,16 +39,23 @@ public class CodeApplicationServiceImpl implements CodeApplicationService {
 
 	@Override
 	public ArrayList<CodeDetailTO> getDetailCodeList(String divisionCode) {
+		
 		ArrayList<CodeDetailTO> codeDetailList = null;
-		codeDetailList = codeDetailDAO.selectDetailCodeList(divisionCode);
+		
+		// jpa 구현
+		// codeDetailList = codeDetailDAO.selectDetailCodeList(divisionCode);
+		codeDetailList = codeDetailRepository.findByDivisionCodeNoLike(divisionCode);
+					
 		return codeDetailList;
 	}
 
 	public Boolean checkCodeDuplication(String divisionCode, String newDetailCode) {
-		ArrayList<CodeDetailTO> detailCodeList = null;
+		List<CodeDetailTO> detailCodeList = null;
 		Boolean duplicated = false;
-		detailCodeList = codeDetailDAO.selectDetailCodeList(divisionCode);
-
+	
+		//jap구현
+		//detailCodeList = codeDetailDAO.selectDetailCodeList(divisionCode);
+		detailCodeList =codeDetailRepository.findByDivisionCodeNoLike(divisionCode);
 		for (CodeDetailTO bean : detailCodeList) {
 
 			if (bean.getDetailCode().equals(newDetailCode)) {

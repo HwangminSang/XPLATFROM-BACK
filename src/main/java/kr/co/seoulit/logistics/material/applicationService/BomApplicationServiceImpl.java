@@ -6,17 +6,21 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.logistics.material.dao.BomDAO;
+import kr.co.seoulit.logistics.logisticsInfo.applicationService.ItemApplicationService;
+import kr.co.seoulit.logistics.logisticsInfo.applicationService.WarehouseApplicationService;
+import kr.co.seoulit.logistics.material.mapper.BomDAO;
 import kr.co.seoulit.logistics.material.to.BomDeployTO;
 import kr.co.seoulit.logistics.material.to.BomInfoTO;
 import kr.co.seoulit.logistics.material.to.BomTO;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @Component
 public class BomApplicationServiceImpl implements BomApplicationService {
 
 	// DAO 참조변수 선언
-	@Autowired
-	private BomDAO bomDAO;
+	
+	private final BomDAO bomDAO;
 	
 	public ArrayList<BomDeployTO> getBomDeployList(String deployCondition, String itemCode, String itemClassificationCondition) {
 		HashMap<String, String> map = new HashMap<>();

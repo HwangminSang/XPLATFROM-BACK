@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.system.base.dao.ReportDAO;
+import kr.co.seoulit.system.base.mapper.ReportDAO;
 import kr.co.seoulit.system.base.to.ContractReportTO;
 import kr.co.seoulit.system.base.to.EstimateReportTO;
 

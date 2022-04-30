@@ -428,7 +428,7 @@ function initEvent() {
 			
 			$.ajax({ 
 				type : 'POST',
-				url : '${pageContext.request.contextPath}/basicInfo/batchDepartmentListProcess.do' ,
+				url : '${pageContext.request.contextPath}/basicInfo/batchDepartmentListProcess' ,
 				async :false,
 				data : {
 					method : 'batchListProcess', 
@@ -489,7 +489,7 @@ function showDepartmentGrid() {
 
 	$.ajax({ 
 		type : 'GET',
-		url : '${pageContext.request.contextPath}/basicInfo/searchDepartment.do' ,
+		url : '${pageContext.request.contextPath}/basicInfo/searchDepartment' ,
 		async :false,
 		data : {
 			method : 'searchDepartmentList' ,
@@ -529,7 +529,7 @@ function showCodeDialog(grid, rowid, iCol, divisionCodeNo, title) {
 
 	$("#codeGrid").jqGrid({
 
-		url : "${pageContext.request.contextPath}/base/codeList.do",
+		url : "${pageContext.request.contextPath}/base/codeList",
 		datatype : "json",
 		jsonReader : {
 			root : "detailCodeList"

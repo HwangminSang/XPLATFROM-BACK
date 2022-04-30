@@ -18,99 +18,105 @@ import kr.co.seoulit.logistics.sales.to.DeliveryInfoTO;
 import kr.co.seoulit.logistics.sales.to.EstimateDetailTO;
 import kr.co.seoulit.logistics.sales.to.EstimateTO;
 import kr.co.seoulit.logistics.sales.to.SalesPlanTO;
-
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @Service
 public class SalesServiceFacadeImpl implements SalesServiceFacade {
 
 	// 참조변수 선언
-	@Autowired
-	private EstimateApplicationService estimateAS;
-	@Autowired
-	private ContractApplicationService contractAS;
-	@Autowired
-	private SalesPlanApplicationService salesPlanAS;
-	@Autowired
-	private DeliveryApplicationService deliveryAS;
+
+	private final EstimateApplicationService estimateApplicationService;
+
+	private final ContractApplicationService contractApplicationService;
 	
-	@Override
+	private final SalesPlanApplicationService salesPlanApplicationService;
+	
+	private final DeliveryApplicationService deliveryApplicationService;
+	
+	@Override //견적조회
 	public ArrayList<EstimateTO> getEstimateList(String dateSearchCondition, String startDate, String endDate) {
-		return estimateAS.getEstimateList(dateSearchCondition, startDate, endDate);
+		return estimateApplicationService.getEstimateList(dateSearchCondition, startDate, endDate);
 	}
 
 	@Override
 	public ArrayList<EstimateDetailTO> getEstimateDetailList(String estimateNo) {
-		return estimateAS.getEstimateDetailList(estimateNo);
+		return estimateApplicationService.getEstimateDetailList(estimateNo);
 	}
 
 	@Override
 	public HashMap<String, Object> addNewEstimate(String estimateDate, EstimateTO newEstimateTO) {
-		return estimateAS.addNewEstimate(estimateDate, newEstimateTO);
+		return estimateApplicationService.addNewEstimate(estimateDate, newEstimateTO);
 	}
 
 	@Override
-	public HashMap<String, Object> batchEstimateDetailListProcess(ArrayList<EstimateDetailTO> estimateDetailTOList,String estimateNo) {
-		return estimateAS.batchEstimateDetailListProcess(estimateDetailTOList,estimateNo);
+	public HashMap<String, Object> batchEstimateDetailListProcess(ArrayList<EstimateDetailTO> estimateDetailTOList) {
+		return estimateApplicationService.batchEstimateDetailListProcess(estimateDetailTOList);
 	}
 
 	@Override
 	public ArrayList<ContractInfoTO> getContractList(String searchCondition, String[] paramArray) {
-		return contractAS.getContractList(searchCondition, paramArray);
+		return contractApplicationService.getContractList(searchCondition, paramArray);
 	}
 
 	@Override
-	public ArrayList<ContractInfoTO> getDeliverableContractList(String searchCondition, String[] paramArray) {
-		return contractAS.getDeliverableContractList(searchCondition, paramArray);
+	public ArrayList<ContractInfoTO> getContractListByCondition(HashMap<String, String> map) {
+		return contractApplicationService.getContractListByCondition(map);
+	}
+	
+	@Override
+	public ArrayList<ContractInfoTO> getDeliverableContractList(HashMap<String, String> map) {
+		return contractApplicationService.getDeliverableContractList(map);
 	}
 	
 	@Override
 	public ArrayList<ContractDetailTO> getContractDetailList(String estimateNo) {
-		return contractAS.getContractDetailList(estimateNo);
+		return contractApplicationService.getContractDetailList(estimateNo);
 	}
 
 	@Override
 	public ArrayList<EstimateTO> getEstimateListInContractAvailable(String startDate, String endDate) {
-		return contractAS.getEstimateListInContractAvailable(startDate, endDate);
+		return contractApplicationService.getEstimateListInContractAvailable(startDate, endDate);
 	}
 
 	@Override
 	public HashMap<String, Object> addNewContract(String contractDate, String personCodeInCharge,
 			ContractTO workingContractTO) {
-		return contractAS.addNewContract(contractDate, personCodeInCharge, workingContractTO);
+		return contractApplicationService.addNewContract(contractDate, personCodeInCharge, workingContractTO);
 	}
 
 	@Override
 	public HashMap<String, Object> batchContractDetailListProcess(ArrayList<ContractDetailTO> contractDetailTOList) {
-		return contractAS.batchContractDetailListProcess(contractDetailTOList);
+		return contractApplicationService.batchContractDetailListProcess(contractDetailTOList);
 	}
 
 	@Override
 	public void changeContractStatusInEstimate(String estimateNo, String contractStatus) {
-		contractAS.changeContractStatusInEstimate(estimateNo, contractStatus);
+		contractApplicationService.changeContractStatusInEstimate(estimateNo, contractStatus);
 	}
 
 	@Override
 	public ArrayList<SalesPlanTO> getSalesPlanList(String dateSearchCondition, String startDate, String endDate) {
-		return salesPlanAS.getSalesPlanList(dateSearchCondition, startDate, endDate);
+		return salesPlanApplicationService.getSalesPlanList(dateSearchCondition, startDate, endDate);
 	}
 
 	@Override
 	public HashMap<String, Object> batchSalesPlanListProcess(ArrayList<SalesPlanTO> salesPlanTOList) {
-		return salesPlanAS.batchSalesPlanListProcess(salesPlanTOList);
+		return salesPlanApplicationService.batchSalesPlanListProcess(salesPlanTOList);
 	}
 
 	@Override
-	public ArrayList<DeliveryInfoTO> getDeliveryInfoList() {
-		return deliveryAS.getDeliveryInfoList();
+	public ArrayList<DeliveryInfoTO> getDeliveryInfoList(HashMap<String, String> map) {
+		return deliveryApplicationService.getDeliveryInfoList(map);
 	}
 
 	@Override
 	public HashMap<String, Object> batchDeliveryListProcess(List<DeliveryInfoTO> deliveryTOList) {
-		return deliveryAS.batchDeliveryListProcess(deliveryTOList);
+		return deliveryApplicationService.batchDeliveryListProcess(deliveryTOList);
 	}
 
 	@Override
 	public HashMap<String, Object> deliver(String contractDetailNo) {
-		return deliveryAS.deliver(contractDetailNo);
+		return deliveryApplicationService.deliver(contractDetailNo);
 	}
 	
 }

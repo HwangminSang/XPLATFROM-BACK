@@ -1,10 +1,23 @@
 package kr.co.seoulit.logistics.sales.to;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import kr.co.seoulit.system.base.to.BaseTO;
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 @Data
+@EqualsAndHashCode(callSuper=false)
+@Entity
+@Table(name="CONTRACT_DETAIL")
+@Dataset(name="gds_contractDetail")
 public class ContractDetailTO extends BaseTO {
 	
+	@Id
 	private String contractDetailNo;
 	private String contractNo;
 	private String itemCode;
@@ -21,5 +34,7 @@ public class ContractDetailTO extends BaseTO {
 	private String deliveryCompletionStatus;	
 	private String description;
 	private String mrpGatheringNo;
+	@Transient
+	private String checked;
 
 }

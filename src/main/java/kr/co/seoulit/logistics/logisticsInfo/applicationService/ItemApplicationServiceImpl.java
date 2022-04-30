@@ -2,27 +2,34 @@ package kr.co.seoulit.logistics.logisticsInfo.applicationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.logistics.logisticsInfo.dao.ItemDAO;
+import kr.co.seoulit.logistics.logisticsInfo.mapper.ItemDAO;
+import kr.co.seoulit.logistics.logisticsInfo.repository.ItemRepository;
+import kr.co.seoulit.logistics.logisticsInfo.serviceFacade.LogisticsInfoServiceFacade;
 import kr.co.seoulit.logistics.logisticsInfo.to.ItemInfoTO;
 import kr.co.seoulit.logistics.logisticsInfo.to.ItemTO;
-import kr.co.seoulit.logistics.material.dao.BomDAO;
+import kr.co.seoulit.logistics.material.mapper.BomDAO;
 import kr.co.seoulit.logistics.material.to.BomTO;
-import kr.co.seoulit.system.base.dao.CodeDetailDAO;
+import kr.co.seoulit.system.base.mapper.CodeDetailDAO;
 import kr.co.seoulit.system.base.to.CodeDetailTO;
-
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @Component
 public class ItemApplicationServiceImpl implements ItemApplicationService {
+	
 	// DAO 참조변수 선언
-	@Autowired
-	private ItemDAO itemDAO;
-	@Autowired
-	private CodeDetailDAO codeDetailDAO;
-	@Autowired
-	private BomDAO bomDAO;
+	
+	private final ItemDAO itemDAO;
+	
+	private final CodeDetailDAO codeDetailDAO;
+	
+	private final BomDAO bomDAO;
+	
+	private final ItemRepository itemRepository;
 	
 	public ArrayList<ItemInfoTO> getItemInfoList(String searchCondition, String[] paramArray) {
 		ArrayList<ItemInfoTO> itemInfoList = null;
@@ -163,10 +170,17 @@ public class ItemApplicationServiceImpl implements ItemApplicationService {
 	}
 
 	@Override
-	public int getStandardUnitPrice(String itemCode) {
+	public ItemTO getStandardUnitPrice(String itemCode) {
+		
+		// jpa 구현
+		/*
 		int price = 0;
 		price = itemDAO.getStandardUnitPrice(itemCode);
 		return price;
+		*/
+		ItemTO item = itemRepository.findByItemCode(itemCode).orElse(new ItemTO());
+
+		return item;
 	}
 	
 	@Override

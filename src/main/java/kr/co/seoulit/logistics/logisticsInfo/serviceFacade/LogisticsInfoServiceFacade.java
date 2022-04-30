@@ -18,7 +18,7 @@ public interface LogisticsInfoServiceFacade {
 
 	public String findLastWarehouseCode();
 	
-	public int getStandardUnitPrice(String itemCode);
+	public ItemTO getStandardUnitPrice(String itemCode);
 	
 	public int getStandardUnitPriceBox(String itemCode);
 	

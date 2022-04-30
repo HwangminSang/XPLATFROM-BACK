@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.tobesoft.xplatform.data.PlatformData;
 
 import kr.co.seoulit.system.base.serviceFacade.BaseServiceFacade;
 import kr.co.seoulit.system.base.to.CodeDetailTO;
 import kr.co.seoulit.system.base.to.CodeTO;
+import kr.co.seoulit.system.basicInfo.to.CompanyTO;
+import kr.co.seoulit.system.common.mapper.DatasetBeanMapper;
 
 @RestController
 @RequestMapping("/base/*")
@@ -27,11 +29,13 @@ public class CodeController{
 	// serviceFacade 참조변수 선언
 	@Autowired
 	private BaseServiceFacade baseSF;
+	@Autowired
+	private DatasetBeanMapper datasetBeanMapper;
 
 	// gson 라이브러리
 	private static Gson gson = new GsonBuilder().serializeNulls().create(); // 속성값이 null 인 속성도 json 변환
 
-	@RequestMapping(value="/searchCodeList.do", method=RequestMethod.GET)
+	@RequestMapping(value="/searchCodeList", method=RequestMethod.GET)
 	public ModelAndView findCodeList() {
 
 		HashMap<String, Object> map = new HashMap<>();
@@ -43,21 +47,21 @@ public class CodeController{
 		return new ModelAndView("jsonView",map);
 	}
 
-	@RequestMapping(value = "/codeList.do", method = RequestMethod.GET)
-	public ModelAndView findDetailCodeList(HttpServletRequest request) {
+	@RequestMapping(value = "/codeList")
+	public void findDetailCodeList(HttpServletRequest request) throws Exception {
 
-		String divisionCode = request.getParameter("divisionCodeNo");	//estimateRegister.jsp 에서 날아온값으 받아줌 divisionCode = "CL-01"
+		PlatformData reqData = (PlatformData) request.getAttribute("reqData");
+		PlatformData resData = (PlatformData) request.getAttribute("resData");
+		
+		//VariableList:name=divisionCode, type=string, value="CL-01"
+		String divisionCode = reqData.getVariable("divisionCode").getString();	 //value값을 얻어옴
 
-		HashMap<String, Object> map = new HashMap<>();
 		ArrayList<CodeDetailTO> detailCodeList = baseSF.getDetailCodeList(divisionCode); 
-
-		map.put("detailCodeList", detailCodeList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-		return new ModelAndView("jsonView",map);
+		datasetBeanMapper.beansToDataset(resData, detailCodeList, CodeDetailTO.class);
+		
 	}
 
-	@RequestMapping(value="/checkCodeDeuplication.do", method = RequestMethod.GET)
+	@RequestMapping(value="/checkCodeDeuplication", method = RequestMethod.GET)
 	public ModelAndView checkCodeDuplication(HttpServletRequest request) {
 
 		String divisionCode = request.getParameter("divisionCode");
@@ -73,7 +77,7 @@ public class CodeController{
 		return new ModelAndView("jsonView",map);
 	}
 
-	@RequestMapping(value="/batchListProcess.do", method = RequestMethod.POST)
+	@RequestMapping(value="/batchListProcess", method = RequestMethod.POST)
 	public ModelAndView batchListProcess(HttpServletRequest request) {
 
 		String batchList = request.getParameter("batchList");
@@ -107,7 +111,7 @@ public class CodeController{
 	}
 
 
-	@RequestMapping(value="/changeCodeUseCheckProcess.do", method = RequestMethod.POST)
+	@RequestMapping(value="/changeCodeUseCheckProcess", method = RequestMethod.POST)
 	public ModelAndView changeCodeUseCheckProcess(HttpServletRequest request) {
 
 		String batchList = request.getParameter("batchList");

@@ -6,15 +6,19 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.logistics.sales.dao.SalesPlanDAO;
+import kr.co.seoulit.logistics.sales.mapper.EstimateDAO;
+import kr.co.seoulit.logistics.sales.mapper.EstimateDetailDAO;
+import kr.co.seoulit.logistics.sales.mapper.SalesPlanDAO;
+import kr.co.seoulit.logistics.sales.repository.EstimateRepository;
 import kr.co.seoulit.logistics.sales.to.SalesPlanTO;
-
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @Component
 public class SalesPlanApplicationServiceImpl implements SalesPlanApplicationService {
 
 	// DAO 참조변수 선언
-	@Autowired
-	private SalesPlanDAO salesPlanDAO;
+	
+	private final SalesPlanDAO salesPlanDAO;
 
 	public ArrayList<SalesPlanTO> getSalesPlanList(String dateSearchCondition, String startDate, String endDate) {
 		HashMap<String, String> map = new HashMap<>();

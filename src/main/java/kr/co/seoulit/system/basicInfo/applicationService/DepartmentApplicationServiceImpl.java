@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.system.base.dao.CodeDetailDAO;
+import kr.co.seoulit.system.base.mapper.CodeDetailDAO;
 import kr.co.seoulit.system.base.to.CodeDetailTO;
-import kr.co.seoulit.system.basicInfo.dao.DepartmentDAO;
+import kr.co.seoulit.system.basicInfo.mapper.DepartmentDAO;
 import kr.co.seoulit.system.basicInfo.to.DepartmentTO;
 
 @Component

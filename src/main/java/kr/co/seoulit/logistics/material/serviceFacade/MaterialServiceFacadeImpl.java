@@ -15,91 +15,93 @@ import kr.co.seoulit.logistics.material.to.BomTO;
 import kr.co.seoulit.logistics.material.to.OrderInfoTO;
 import kr.co.seoulit.logistics.material.to.StockLogTO;
 import kr.co.seoulit.logistics.material.to.StockTO;
+import kr.co.seoulit.system.common.mapper.DatasetBeanMapper;
+import lombok.AllArgsConstructor;
 
-
+@AllArgsConstructor
 @Service
 public class MaterialServiceFacadeImpl implements MaterialServiceFacade {
 	// 참조변수 선언
-	@Autowired
-	private BomApplicationService bomAS;
-	@Autowired
-	private OrderApplicationService orderAS;
-	@Autowired
-	private StockApplicationService stockAS;
+
+	private final BomApplicationService bomApplicationService;
+
+	private final OrderApplicationService orderApplicationService;
+
+	private final StockApplicationService stockApplicationService;
 	
 	@Override
 	public ArrayList<BomDeployTO> getBomDeployList(String deployCondition, String itemCode,
 			String itemClassificationCondition) {
-		return bomAS.getBomDeployList(deployCondition, itemCode, itemClassificationCondition);
+		return bomApplicationService.getBomDeployList(deployCondition, itemCode, itemClassificationCondition);
 	}
 
 	@Override
 	public ArrayList<BomInfoTO> getBomInfoList(String parentItemCode) {
-		return bomAS.getBomInfoList(parentItemCode);
+		return bomApplicationService.getBomInfoList(parentItemCode);
 	}
 
 	@Override
 	public HashMap<String,Object> getOrderList(String startDate, String endDate) {
-		return orderAS.getOrderList(startDate, endDate);
+		return orderApplicationService.getOrderList(startDate, endDate);
 	}
 
 	@Override
 	public ArrayList<BomInfoTO> getAllItemWithBomRegisterAvailable() {
-		return bomAS.getAllItemWithBomRegisterAvailable();
+		return bomApplicationService.getAllItemWithBomRegisterAvailable();
 	}
 
 	@Override
 	public HashMap<String, Object> batchBomListProcess(ArrayList<BomTO> batchBomList) {
-		return bomAS.batchBomListProcess(batchBomList);
+		return bomApplicationService.batchBomListProcess(batchBomList);
 
 	}
 
 	@Override
-	public HashMap<String,Object> getOrderDialogInfo(String mrpNoArr) {
-		return orderAS.getOrderDialogInfo(mrpNoArr);
+	public HashMap<String,Object> getOrderDialogInfo(String mrpGatheringNoListStr) {
+		return orderApplicationService.getOrderDialogInfo(mrpGatheringNoListStr);
 
 	}
 
 	@Override
 	public HashMap<String,Object> order(ArrayList<String> mrpGaNoArr) {
-    	return orderAS.order(mrpGaNoArr);
+    	return orderApplicationService.order(mrpGaNoArr);
 		
 	}
 
 	@Override
 	public HashMap<String,Object> optionOrder(String itemCode, String itemAmount) {
 		// TODO Auto-generated method stub
-    	return orderAS.optionOrder(itemCode, itemAmount);
+    	return orderApplicationService.optionOrder(itemCode, itemAmount);
 	}
 
 	@Override
 	public ArrayList<StockTO> getStockList() {
-		return stockAS.getStockList();
+		return stockApplicationService.getStockList();
 	}
 
 	@Override
 	public ArrayList<StockLogTO> getStockLogList(String startDate, String endDate) {
-		return stockAS.getStockLogList(startDate, endDate);
+		return stockApplicationService.getStockLogList(startDate, endDate);
 	}
 
 	@Override
 	public ArrayList<OrderInfoTO> getOrderInfoListOnDelivery() {
-		return orderAS.getOrderInfoListOnDelivery();
+		return orderApplicationService.getOrderInfoListOnDelivery();
 	}
 
 	@Override
 	public HashMap<String,Object> warehousing(ArrayList<String> orderNoArr) {
-    	return stockAS.warehousing(orderNoArr);
+    	return stockApplicationService.warehousing(orderNoArr);
 	}
 
 	@Override
 	public ArrayList<OrderInfoTO> getOrderInfoList(String startDate, String endDate) {
-		return orderAS.getOrderInfoList(startDate,endDate);
+		return orderApplicationService.getOrderInfoList(startDate,endDate);
 	}
 	
 	@Override
 	public HashMap<String,Object> checkOrderInfo(ArrayList<String> orderNoArr) {
 		// TODO Auto-generated method stub
-		return orderAS.checkOrderInfo(orderNoArr);
+		return orderApplicationService.checkOrderInfo(orderNoArr);
 	}
 }

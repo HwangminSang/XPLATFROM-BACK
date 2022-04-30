@@ -200,7 +200,7 @@
   const getWorkSiteList = () => {
     workSiteGridOptions.api.setRowData([]);
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', '${pageContext.request.contextPath}/production/showWorkOrderInfoList.do' +
+    xhr.open('GET', '${pageContext.request.contextPath}/production/showWorkOrderInfoList' +
         "?method=showWorkOrderInfoList",
         true)
     xhr.setRequestHeader('Accept', 'application/json');
@@ -314,12 +314,14 @@
     console.log(modalData)
     let itemCodeList = []; 
     modalData.forEach(function(rowNode, index) {
-      itemCodeList.push(rowNode.data.itemCode); // 랜더링된 노드의 아이템코드를 배열에 넣는다. 
+      itemCodeList.push(rowNode.data.itemCode); // 랜더링된 노드의 아이템코드를 배열에 넣는다.
+      
     });
 
     let confirmMsg = "완료날짜 : "+ today +"</br>"+
-        "제품 "+(workProduct.itemClassIfication == "원재료" ? "검사" : "제작") +" 할 갯수"+ modalData.length +"</br>"
+        "제품 "+(workProduct.itemClassIfication == "원재료" ? "검사" : "제작") +" 할 갯수 : "+ workProduct.requiredAmount +"</br>"  //modalData.length
         + "<b>"+workProduct.wdItem+" : "+workProduct.parentItemName+ "</b>"
+    console.log(workProduct.requiredAmount);
     console.log(itemCodeList);
     // o 데이터 전송
     Swal.fire({
@@ -337,7 +339,7 @@
         console.log(workProduct.parentItemCode); // 상위 아이템코드 
         console.log(itemCodeList); // 작업중인 품목들의 아이템코드 
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', '${pageContext.request.contextPath}/production/workCompletion.do' +
+        xhr.open('POST', '${pageContext.request.contextPath}/production/workCompletion' +
             "?method=workCompletion"
             + "&workOrderNo=" + encodeURI(workProduct.workOrderNo)
             + "&itemCode=" + encodeURI(workProduct.parentItemCode)
@@ -414,7 +416,7 @@
       return;
     }
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', '${pageContext.request.contextPath}/production/workSiteLog.do' +
+    xhr.open('POST', '${pageContext.request.contextPath}/production/workSiteLog' +
         "?method=workSiteLogList"
         + "&workSiteLogDate=" + _workSiteLogDate,
         true)

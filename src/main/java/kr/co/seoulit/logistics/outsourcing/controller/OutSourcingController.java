@@ -1,41 +1,45 @@
 package kr.co.seoulit.logistics.outsourcing.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
+import com.tobesoft.xplatform.data.PlatformData;
+
+import kr.co.seoulit.logistics.outsourcing.mapper.OutSourcingDAO;
 import kr.co.seoulit.logistics.outsourcing.serviceFacade.OutSourcingServiceFacade;
 import kr.co.seoulit.logistics.outsourcing.to.OutSourcingTO;
-
+import kr.co.seoulit.system.common.mapper.DatasetBeanMapper;
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @RestController
 @RequestMapping("/outsourcing/*")
 public class OutSourcingController{
 	// serviceFacade 참조변수 선언
-	@Autowired
-	private OutSourcingServiceFacade outSourcingServiceFacade;
+	
+	private final OutSourcingServiceFacade outSourcingServiceFacade;
+	
+	private final DatasetBeanMapper datasetBeanMapper;
 
-	@RequestMapping(value="/getOutSourcingList.do", method=RequestMethod.GET)
-	public ModelAndView searchOutSourcingList(HttpServletRequest request) {
+	@RequestMapping(value="/getOutSourcingList")
+	public void getOutSourcingList(@RequestAttribute("reqData")PlatformData reqData,@RequestAttribute("resData")PlatformData resData) throws Exception {
+		
 
-		HashMap<String, Object> map = new HashMap<>();
-		String fromDate = request.getParameter("fromDate");
-		String toDate = request.getParameter("toDate");
-		String customerCode = request.getParameter("customerCode");
-		String itemCode = request.getParameter("itemCode");
-		String materialStatus = request.getParameter("materialStatus");
+		String fromDate = reqData.getVariable("instructDate").getString();
+		String toDate = reqData.getVariable("completeDate").getString();
+		String materialStatus = reqData.getVariable("materialStatus").getString();
+		String customerCode = "";		
+		String itemCode = ""; 			
+
+		// jpa 미구현 - join 구문
 		ArrayList<OutSourcingTO> outSourcingList;
-		outSourcingList = outSourcingServiceFacade.searchOutSourcingList(fromDate,toDate,customerCode,itemCode,materialStatus);
-		map.put("outSourcingList", outSourcingList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-		return new ModelAndView("jsonView",map);
+			outSourcingList = outSourcingServiceFacade.searchOutSourcingList(fromDate,toDate,customerCode,itemCode,materialStatus);
+
+		datasetBeanMapper.beansToDataset(resData, outSourcingList, OutSourcingTO.class);
 	}
 }

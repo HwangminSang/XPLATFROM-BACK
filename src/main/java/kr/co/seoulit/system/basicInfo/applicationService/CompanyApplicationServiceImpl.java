@@ -2,16 +2,18 @@ package kr.co.seoulit.system.basicInfo.applicationService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.system.base.dao.CodeDetailDAO;
+import kr.co.seoulit.system.base.mapper.CodeDetailDAO;
 import kr.co.seoulit.system.base.to.CodeDetailTO;
-import kr.co.seoulit.system.basicInfo.dao.CompanyDAO;
+import kr.co.seoulit.system.basicInfo.mapper.CompanyDAO;
+import kr.co.seoulit.system.basicInfo.repository.CompanyRepository;
 import kr.co.seoulit.system.basicInfo.to.CompanyTO;
 
 @Component
@@ -21,11 +23,17 @@ public class CompanyApplicationServiceImpl implements CompanyApplicationService 
 	private CompanyDAO companyDAO;
 	@Autowired
 	private CodeDetailDAO codeDetailDAO;
+	@Autowired
+	private CompanyRepository companyRepository;
 	
 	public ArrayList<CompanyTO> getCompanyList() {
+		/* jpa 구현
 		ArrayList<CompanyTO> companyList = null;
 		companyList = companyDAO.selectCompanyList();
-		return companyList;
+		*/
+		List<CompanyTO> companyList = companyRepository.findAll(Sort.by(Sort.Direction.ASC, "companyCode"));
+		return new ArrayList<>(companyList);
+		
 	}
 
 	public String getNewCompanyCode() {

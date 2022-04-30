@@ -122,7 +122,7 @@
 	let EmployeeData;
 	function getEmployeeData(){
         let xhr = new XMLHttpRequest(); 
-        xhr.open('GET', '${pageContext.request.contextPath}/authorityManager/searchAllEmpList.do' +
+        xhr.open('GET', '${pageContext.request.contextPath}/authorityManager/searchAllEmpList' +
             "?method=searchAllEmpList"
             + "&searchCondition=ALL"
             + "&companyCode=COM-01",
@@ -153,7 +153,7 @@
 		empCode = employeeRowNode[0].data.empCode;
 		// console.log(empCode);
         let xhr = new XMLHttpRequest(); 
-        xhr.open('GET', '${pageContext.request.contextPath}/authorityManager/getUserAuthorityGroup.do' +
+        xhr.open('GET', '${pageContext.request.contextPath}/authorityManager/getUserAuthorityGroup' +
             "?method=getUserAuthorityGroup&empCode="+empCode, 
             true);
         xhr.setRequestHeader('Accept', 'application/json');
@@ -198,7 +198,7 @@
 					// console.log(insertData); 
 						
 		  	        let xhr = new XMLHttpRequest(); 
-			        xhr.open('POST', '${pageContext.request.contextPath}/authorityManager/insertEmployeeAuthorityGroup.do' +
+			        xhr.open('POST', '${pageContext.request.contextPath}/authorityManager/insertEmployeeAuthorityGroup' +
 			            "?method=insertEmployeeAuthorityGroup"+
 			            "&empCode="+empCode+
 			            "&insertData="+encodeURI(insertData), 

@@ -25,12 +25,12 @@ public class DepartmentController{
 
 	// serviceFacade 참조변수 선언
 	@Autowired
-	private BasicInfoServiceFacade orgSF;
+	private BasicInfoServiceFacade basicInfoServiceFacade;
 
 	// GSON 라이브러리
 	private static Gson gson = new GsonBuilder().serializeNulls().create(); // 속성값이 null 인 속성도 JSON 변환
 
-	@RequestMapping(value="/searchDepartment.do", method = RequestMethod.GET)
+	@RequestMapping(value="/searchDepartment", method = RequestMethod.GET)
 	public ModelAndView searchDepartmentList(HttpServletRequest request) {
 
 		String searchCondition = request.getParameter("searchCondition");
@@ -43,7 +43,7 @@ public class DepartmentController{
 		ArrayList<DepartmentTO> departmentList = null;
 
 		HashMap<String, Object> map = new HashMap<>();
-		departmentList = orgSF.getDepartmentList(searchCondition, companyCode, workplaceCode);
+		departmentList = basicInfoServiceFacade.getDepartmentList(searchCondition, companyCode, workplaceCode);
 
 		map.put("gridRowJson", departmentList);
 		map.put("errorCode", 1);
@@ -52,7 +52,7 @@ public class DepartmentController{
 		return new ModelAndView("jsonView",map);
 	}
 
-	@RequestMapping(value="/batchDepartmentListProcess.do", method = RequestMethod.POST)
+	@RequestMapping(value="/batchDepartmentListProcess", method = RequestMethod.POST)
 	public ModelAndView batchListProcess(HttpServletRequest request) {
 
 		String batchList = request.getParameter("batchList");
@@ -61,7 +61,7 @@ public class DepartmentController{
 		}.getType());
 
 		HashMap<String, Object> map = new HashMap<>();
-		HashMap<String, Object> resultMap = orgSF.batchDepartmentListProcess(departmentList);
+		HashMap<String, Object> resultMap = basicInfoServiceFacade.batchDepartmentListProcess(departmentList);
 
 		map.put("result", resultMap);
 		map.put("errorCode", 1);

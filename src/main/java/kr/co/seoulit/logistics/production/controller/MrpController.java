@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,151 +15,171 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.tobesoft.xplatform.data.PlatformData;
+import com.tobesoft.xplatform.data.VariableList;
 
 import kr.co.seoulit.logistics.production.serviceFacade.ProductionServiceFacade;
 import kr.co.seoulit.logistics.production.to.MrpGatheringTO;
+import kr.co.seoulit.logistics.production.to.MrpInsertInfoTO;
 import kr.co.seoulit.logistics.production.to.MrpTO;
-
+import kr.co.seoulit.logistics.production.to.OpenMrpTO;
+import kr.co.seoulit.system.common.mapper.DatasetBeanMapper;
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @RestController
 @RequestMapping("/production/*")
 public class MrpController{
 	// serviceFacade 참조변수 선언
-	@Autowired
-	private ProductionServiceFacade productionSF;
+
+	private final ProductionServiceFacade poductionServiceFacade;
+
+	private final DatasetBeanMapper datasetBeanMapper;
 	
 	// gson 라이브러리
 	private static Gson gson = new GsonBuilder().serializeNulls().create(); // 속성값이 null 인 속성도 json 변환
 
-	@RequestMapping(value="/getMrpList.do", method=RequestMethod.GET)
-	public ModelAndView getMrpList(HttpServletRequest request) {
+	//소요량전개취합 화면 바뀌자 바로 받아옴
+	@RequestMapping(value="/getMrpList")
+	public void getMrpList(@RequestAttribute("reqData")PlatformData reqData,
+			               @RequestAttribute("resData")PlatformData resData) throws Exception {
 		
-		String mrpGatheringStatusCondition = request.getParameter("mrpGatheringStatusCondition");	
-		String dateSearchCondition = request.getParameter("dateSearchCondition");
-		String mrpStartDate = request.getParameter("mrpStartDate");
-		String mrpEndDate = request.getParameter("mrpEndDate");
-		String mrpGatheringNo = request.getParameter("mrpGatheringNo");
-	
-		HashMap<String, Object> map = new HashMap<>();
+		
+		String mrpGatheringStatusCondition = reqData.getVariable("mrpGatheringStatusCondition").getString();  //처음에는 null
+		String dateSearchCondition = reqData.getVariable("dateSearchCondition").getString(); // ''
+		String mrpStartDate = reqData.getVariable("mrpStartDate").getString();//''
+		String mrpEndDate = reqData.getVariable("mrpEndDate").getString();//''
+		String mrpGatheringNo = reqData.getVariable("mrpGatheringNo").getString(); //'' 소요량 취합번호
+		
 		ArrayList<MrpTO> mrpList = null;
 		
+		if(mrpGatheringStatusCondition.equals("null")) {
+			//여기 null이라는 스트링값이 담겨저왔으니 null은 아님. 객체가있는상태.		
+			mrpList = poductionServiceFacade.searchMrpList(mrpGatheringStatusCondition);
+			
+		} else if (!dateSearchCondition.equals("null")) {		
+			mrpList = poductionServiceFacade.searchMrpList(dateSearchCondition, mrpStartDate, mrpEndDate);
+			
+		} else if (!mrpGatheringNo.equals("null")) {	
+			mrpList = poductionServiceFacade.searchMrpListAsMrpGatheringNo(mrpGatheringNo);
 	
-		if(mrpGatheringStatusCondition != null ) {
-			//여기 null이라는 스트링값이 담겨저왔으니 null은 아님. 객체가있는상태.
-			
-			mrpList = productionSF.searchMrpList(mrpGatheringStatusCondition);
-			
-		} else if (dateSearchCondition != null) {
-			
-			mrpList = productionSF.searchMrpList(dateSearchCondition, mrpStartDate, mrpEndDate);
-			
-		} else if (mrpGatheringNo != null) {
-			
-			mrpList = productionSF.searchMrpListAsMrpGatheringNo(mrpGatheringNo);
-			
 		}
 		
-		map.put("gridRowJson", mrpList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-		return new ModelAndView("jsonView",map);
+		
+		datasetBeanMapper.beansToDataset(resData, mrpList, MrpTO.class);
+		
 	}
 	
 
-	@RequestMapping(value="/openMrp.do", method=RequestMethod.POST)
-	public ModelAndView openMrp(HttpServletRequest request) {
-		String mpsNoListStr = request.getParameter("mpsNoList"); 
-		System.out.println("mpsNoListStr 값확인 : "+mpsNoListStr);
+	// MPS 모의전개
+	@RequestMapping(value="/openMrp")
+	public void openMrp(@RequestAttribute("reqData")PlatformData reqData,
+			            @RequestAttribute("resData")PlatformData resData) throws Exception {
 		
-		ArrayList<String> mpsNoArr = gson.fromJson(mpsNoListStr,
-				new TypeToken<ArrayList<String>>() { }.getType());		
-		//제너릭 클래스를 사용할경우 정해지지 않은 제너릭타입을  명시하기위해서 TypeToken을 사용
-		System.out.println("mpsNoArr 값확인 : "+mpsNoArr);
-		HashMap<String, Object> resultMap = new HashMap<>();
-
-		resultMap = productionSF.openMrp(mpsNoArr);
-		return new ModelAndView("jsonView",resultMap);
+	
+		
+		String mpsNoList = reqData.getVariableList().getString("mpsNoList");  //변수의 이름을 적용 하면 VALUE값을 얻어온다
+		
+		//MPS번호가 여러개 있을경우 배열에 넣는다.
+		ArrayList<String> mpsNoArr = new ArrayList<>();
+		mpsNoArr.add(mpsNoList);
+	
+		
+		HashMap<String, Object> resultMap = poductionServiceFacade.openMrp(mpsNoArr);
+		
+		
+		
+		@SuppressWarnings("unchecked")
+		
+		ArrayList<OpenMrpTO> openMrpList = (ArrayList<OpenMrpTO>)resultMap.get("gridRowJson");
+		
+		datasetBeanMapper.beansToDataset(resData, openMrpList, OpenMrpTO.class);
+		
 	}
 
-
-	@RequestMapping(value="/registerMrp.do", method=RequestMethod.POST)
-	public ModelAndView registerMrp(HttpServletRequest request) {
-
-		String batchList = request.getParameter("batchList");  // mrp 모의전개 정보 
-		String mrpRegisterDate = request.getParameter("mrpRegisterDate");  // 소요량 전개 일자 
-
-		ArrayList<String> mpsList	= gson.fromJson(batchList, 
-				new TypeToken<ArrayList<String>>() { }.getType()); // 각각의 json이 to객체가 되어 AraryList에 담김
-		//제너릭 클래스를 사용할경우 정해지지 않은 제너릭타입을  명시하기위해서 TypeToken을 사용
-		System.out.println("mrpRegisterDate"+mrpRegisterDate);
-		HashMap<String, Object> map = new HashMap<>();
-		HashMap<String, Object> resultMap = productionSF.registerMrp(mrpRegisterDate, mpsList);	 
-		System.out.println("resultMap : "+resultMap);
+   //소요량전개 등록
+	@RequestMapping(value="/registerMrp")
+	public void registerMrp(@RequestAttribute("reqData")PlatformData reqData,
+                         @RequestAttribute("resData")PlatformData resData) throws Exception {
 		
-		map.put("result", resultMap);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-		return new ModelAndView("jsonView",map);
-	}
+		// JPA 일부 구현 - Procedure 호출
+		
+		
+		String mrpRegisterDate = reqData.getVariable("mrpRegisterDate").getString();
+		//주생산계획번호
+		String mpsNo = reqData.getVariable("mpsNoCollection").getString();
+		
 	
+					
+		HashMap<String, Object> resultMap = poductionServiceFacade.registerMrp(mrpRegisterDate, mpsNo);	
+		
+		
+		//결과 출력해서 보내주기 . mrp번호
+		 MrpInsertInfoTO mi=(MrpInsertInfoTO)resultMap.get("MrpInsertInfoTO");
+		datasetBeanMapper.beanToDataset(resData,mi,MrpInsertInfoTO.class);
 	
-
-	@RequestMapping(value="/getMrpGatheringList.do", method=RequestMethod.GET)
-	public ModelAndView getMrpGatheringList(HttpServletRequest request) {
-
-		String mrpNoList = request.getParameter("mrpNoList");
-		
-		ArrayList<String> mrpNoArr = gson.fromJson(mrpNoList,
-				new TypeToken<ArrayList<String>>() { }.getType());				
-			//제너릭 클래스를 사용할경우 정해지지 않은 제너릭타입을  명시하기위해서 TypeToken을 사용
-		HashMap<String, Object> map = new HashMap<>();
-		ArrayList<MrpGatheringTO> mrpGatheringList = productionSF.getMrpGathering(mrpNoArr);
-		
-		map.put("gridRowJson", mrpGatheringList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-		return new ModelAndView("jsonView",map);
 	}
 	
 	
+	//소요량 취합 
+	@RequestMapping(value="/getMrpGatheringList")  
+	public void getMrpGatheringList(@RequestAttribute("reqData")PlatformData reqData,
+			                        @RequestAttribute("resData")PlatformData resData) throws Exception {
+		
+		// JPA 미구현 - 서브쿼리 호출
+	
 
-	@RequestMapping(value="/registerMrpGathering.do", method=RequestMethod.POST)
-	public ModelAndView registerMrpGathering(HttpServletRequest request) {
-
-		String mrpGatheringRegisterDate = request.getParameter("mrpGatheringRegisterDate"); //선택한날짜
-		String mrpNoList = request.getParameter("mrpNoList");
-		String mrpNoAndItemCodeList = request.getParameter("mrpNoAndItemCodeList");
-		ArrayList<String> mrpNoArr = gson.fromJson(mrpNoList,
-				new TypeToken<ArrayList<String>>() { }.getType());
+		String mrpNoList = reqData.getVariableList().getString("mrpNoList"); //VariableList:name=mrpNoList, 
+		System.out.println("mrp번호:"+mrpNoList);
+		ArrayList<String> mrpNoArr = new ArrayList<>();
+		mrpNoArr.add(mrpNoList);
+		
+		ArrayList<MrpGatheringTO> mrpGatheringList = poductionServiceFacade.getMrpGathering(mrpNoArr);
+		datasetBeanMapper.beansToDataset(resData, mrpGatheringList, MrpGatheringTO.class);
+	}
+	
+	//소요량 취합 등록
+	@RequestMapping(value="/registerMrpGathering")
+	public void registerMrpGathering(@RequestAttribute("reqData")PlatformData reqData,
+			                           @RequestAttribute("resData")PlatformData resData) throws Exception {
+		
+		
+		String mrpGatheringRegisterDate = reqData.getVariable("mrpGatheringRegisterDate").getString();
+		String mrpNoList = reqData.getVariableList().getString("mrpNoList");
+		String mrpNoAndItemCodeList = reqData.getVariableList().getString("mrpNoAndItemCodeList");
+		
+		ArrayList<String> mrpNoArr = new ArrayList<>();
+		mrpNoArr.add(mrpNoList);
+		
+		// Xplatform의 mrpNoAndItemCodeList를 hashMap으로 저장 방법 요구
 		HashMap<String, String> mrpNoAndItemCodeMap =  gson.fromJson(mrpNoAndItemCodeList, //mprNO : ItemCode 
               new TypeToken<HashMap<String, String>>() { }.getType());
-		HashMap<String, Object> map = new HashMap<>();
-		HashMap<String, Object> resultMap  = productionSF.registerMrpGathering(mrpGatheringRegisterDate, mrpNoArr,mrpNoAndItemCodeMap);	 
-//														선택한날짜                  				getRowData		MRP-NO : DK-AP01
 		
+		//새로 생성된 소요량취합번호 보내기
+		HashMap<String, Object> map=poductionServiceFacade.registerMrpGathering(mrpGatheringRegisterDate, mrpNoArr, mrpNoAndItemCodeMap);	 
+		for(String key: map.keySet()) {
+		resData.getVariableList().add(key,map.get(key));
+		}
 		
-		System.out.println("resultMap : " + resultMap);
-		map.put("result", resultMap);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
-		return new ModelAndView("jsonView",map);
 	}
 	
 
-	@RequestMapping(value="/searchMrpGathering.do", method=RequestMethod.GET)
-	public ModelAndView searchMrpGathering(HttpServletRequest request) {
+	@RequestMapping(value="/searchMrpGathering")
+	public void searchMrpGathering(@RequestAttribute("reqData")PlatformData reqData,
+                                          @RequestAttribute("resData")PlatformData resData)throws Exception{
 
-		String searchDateCondition = request.getParameter("searchDateCondition");
-		String startDate = request.getParameter("mrpGatheringStartDate");
-		String endDate = request.getParameter("mrpGatheringEndDate");
+		String searchDateCondition = reqData.getVariableList().getString("searchDateCondition");
+		 
+		 
+		String startDate = reqData.getVariableList().getString("mrpGatheringStartDate");
+		String endDate = reqData.getVariableList().getString("mrpGatheringEndDate");
 		
-		HashMap<String, Object> map = new HashMap<>();
-		ArrayList<MrpGatheringTO> mrpGatheringList = productionSF.searchMrpGatheringList(searchDateCondition, startDate, endDate);
 		
-		map.put("gridRowJson", mrpGatheringList);
-		map.put("errorCode", 1);
-		map.put("errorMsg", "성공");
+		ArrayList<MrpGatheringTO> mrpGatheringList = poductionServiceFacade.searchMrpGatheringList(searchDateCondition, startDate, endDate);
+		
+		datasetBeanMapper.beansToDataset(resData, mrpGatheringList, MrpGatheringTO.class);
+	
 
-		return new ModelAndView("jsonView",map);
+
 	}
 	
 	

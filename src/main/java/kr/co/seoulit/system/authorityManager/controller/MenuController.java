@@ -17,17 +17,18 @@ import com.google.gson.reflect.TypeToken;
 
 import kr.co.seoulit.system.authorityManager.serviceFacade.AuthorityManagerServiceFacade;
 import kr.co.seoulit.system.authorityManager.to.MenuAuthorityTO;
-
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @RestController
 @RequestMapping("/authorityManager/*")
 public class MenuController{
 	
-	@Autowired
-	private AuthorityManagerServiceFacade authorityManagerSF;
-	private ModelMap modelMap = new ModelMap();
+
+	private final AuthorityManagerServiceFacade authorityManagerServiceFacade;
+	private static ModelMap modelMap = new ModelMap();
 	private static Gson gson = new GsonBuilder().serializeNulls().create();
 
-	@RequestMapping(value="/insertMenuAuthority.do", method=RequestMethod.GET)
+	@RequestMapping(value="/insertMenuAuthority", method=RequestMethod.GET)
 	public ModelMap insertMenuAuthority(HttpServletRequest request) {
 
 		String authorityGroupCode = request.getParameter("authorityGroupCode");
@@ -39,7 +40,7 @@ public class MenuController{
 		
 		try {
 			
-			authorityManagerSF.insertMenuAuthority(authorityGroupCode, menuAuthorityTOList);
+			authorityManagerServiceFacade.insertMenuAuthority(authorityGroupCode, menuAuthorityTOList);
 			
 			modelMap.put("errorCode", 1);
 			modelMap.put("errorMsg", "성공");
@@ -53,7 +54,7 @@ public class MenuController{
 	}
 	
 
-	@RequestMapping(value="/getMenuAuthority.do", method=RequestMethod.GET)
+	@RequestMapping(value="/getMenuAuthority", method=RequestMethod.GET)
 	public ModelMap getMenuAuthority(HttpServletRequest request, HttpServletResponse response) {
 		
 
@@ -62,7 +63,7 @@ public class MenuController{
 		
 		try {
 			
-			ArrayList<MenuAuthorityTO> menuAuthorityTOList = authorityManagerSF.getMenuAuthority(authorityGroupCode);
+			ArrayList<MenuAuthorityTO> menuAuthorityTOList = authorityManagerServiceFacade.getMenuAuthority(authorityGroupCode);
 			
 			modelMap.put("gridRowJson", menuAuthorityTOList);
 			modelMap.put("errorCode", 1);

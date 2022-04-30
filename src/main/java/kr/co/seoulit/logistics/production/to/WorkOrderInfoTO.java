@@ -1,13 +1,25 @@
 package kr.co.seoulit.logistics.production.to;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
 
 @Data
+@Entity
+@Table(name="WORK_ORDER_INFO")
+@Dataset(name="gds_workOrderInfo")
 public class WorkOrderInfoTO {
 
+	@Id
 	private String workOrderNo;
+	/*
+	 * @Transient private String mpsNo;
+	 */
 	private String mrpNo;
-	private String mpsNo;
 	private String mrpGatheringNo;
 	private String itemClassification;
 	private String itemCode;
@@ -21,6 +33,10 @@ public class WorkOrderInfoTO {
 	private String inspectionStatus;
 	private String productionStatus;
 	private String completionStatus;
-	private String setOperationCompleted;
+	private String operationCompleted;   //처음에는 null 
+	@Transient
+	private String checked;
+	@Transient
+	private String actualCompletionAmount;
 	
 }

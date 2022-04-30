@@ -8,31 +8,35 @@ import org.springframework.stereotype.Service;
 
 import kr.co.seoulit.logistics.logisticsInfo.applicationService.ItemApplicationService;
 import kr.co.seoulit.logistics.logisticsInfo.applicationService.WarehouseApplicationService;
+import kr.co.seoulit.logistics.logisticsInfo.mapper.WarehouseDAO;
 import kr.co.seoulit.logistics.logisticsInfo.to.ItemInfoTO;
 import kr.co.seoulit.logistics.logisticsInfo.to.ItemTO;
 import kr.co.seoulit.logistics.logisticsInfo.to.WarehouseTO;
+import lombok.AllArgsConstructor;
 
+
+@AllArgsConstructor
 @Service
 public class LogisticsInfoServiceFacadeImpl implements LogisticsInfoServiceFacade {
 	
-	@Autowired
-	private ItemApplicationService itemAS;
-	@Autowired
-	private WarehouseApplicationService warehouseAS;
+	
+	private final ItemApplicationService itemApplicationService;
+	
+	private final WarehouseApplicationService warehouseApplicationService;
 	
 	@Override
 	public ArrayList<ItemInfoTO> getItemInfoList(String searchCondition, String[] paramArray) {
-		return itemAS.getItemInfoList(searchCondition, paramArray);
+		return itemApplicationService.getItemInfoList(searchCondition, paramArray);
 	}
 
 	@Override
 	public HashMap<String, Object> batchItemListProcess(ArrayList<ItemTO> itemTOList) {
-		return itemAS.batchItemListProcess(itemTOList);
+		return itemApplicationService.batchItemListProcess(itemTOList);
 	}
 
 	@Override
 	public ArrayList<WarehouseTO> getWarehouseInfoList() {
-		return warehouseAS.getWarehouseInfoList();
+		return warehouseApplicationService.getWarehouseInfoList();
 	}
 
 	@Override
@@ -48,14 +52,14 @@ public class LogisticsInfoServiceFacadeImpl implements LogisticsInfoServiceFacad
 	}
 
 	@Override
-	public int getStandardUnitPrice(String itemCode) {
-		return itemAS.getStandardUnitPrice(itemCode);
+	public ItemTO getStandardUnitPrice(String itemCode) {
+		return itemApplicationService.getStandardUnitPrice(itemCode);
 		
 	}
 	
 	@Override
 	public int getStandardUnitPriceBox(String itemCode) {
-		return itemAS.getStandardUnitPriceBox(itemCode);
+		return itemApplicationService.getStandardUnitPriceBox(itemCode);
 	}
 
 }

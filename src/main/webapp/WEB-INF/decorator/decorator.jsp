@@ -64,7 +64,7 @@
                 ${sessionScope.navMenuList}
                 </div>
                 	<div class="navbar-header">
-      					<a class="nav-link" href="${pageContext.request.contextPath}/logout.do">로그아웃</a>
+      					<a class="nav-link" href="${pageContext.request.contextPath}/logout">로그아웃</a>
     				</div>
             </div>
         </nav>

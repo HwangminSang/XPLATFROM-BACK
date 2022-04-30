@@ -2,6 +2,8 @@ package kr.co.seoulit.logistics.production.serviceFacade;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,142 +18,145 @@ import kr.co.seoulit.logistics.production.to.MrpTO;
 import kr.co.seoulit.logistics.production.to.ProductionPerformanceInfoTO;
 import kr.co.seoulit.logistics.production.to.SalesPlanInMpsAvailableTO;
 import kr.co.seoulit.logistics.production.to.WorkOrderInfoTO;
-
+import kr.co.seoulit.logistics.production.to.WorkOrderSimulationTO;
+import kr.co.seoulit.system.common.mapper.DatasetBeanMapper;
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @Service
 public class ProductionServiceFacadeImpl implements ProductionServiceFacade {
 
 
 	// 참조변수 선언
-	@Autowired
-	private MpsApplicationService mpsAS;
-	@Autowired
-	private MrpApplicationService mrpAS;
-	@Autowired
-	private WorkOrderApplicationService workOrderAS;
+
+	private final MpsApplicationService mpsApplicationService;
+
+	private final MrpApplicationService mrpApplicationService;
+	
+	private final WorkOrderApplicationService workOrderApplicationService;
 	
 	@Override
 	public ArrayList<MpsTO> getMpsList(String startDate, String endDate, String includeMrpApply) {
-		return mpsAS.getMpsList(startDate, endDate, includeMrpApply);
+		return mpsApplicationService.getMpsList(startDate, endDate, includeMrpApply);
 	}
 
 	@Override
 	public ArrayList<ContractDetailInMpsAvailableTO> getContractDetailListInMpsAvailable(String searchCondition,
 			String startDate, String endDate) {
-		return mpsAS.getContractDetailListInMpsAvailable(searchCondition, startDate,endDate);
+		return mpsApplicationService.getContractDetailListInMpsAvailable(searchCondition, startDate,endDate);
 
 	}
 
 	@Override
 	public ArrayList<SalesPlanInMpsAvailableTO> getSalesPlanListInMpsAvailable(String searchCondition,
 			String startDate, String endDate) {
-		return mpsAS.getSalesPlanListInMpsAvailable(searchCondition, startDate, endDate);
+		return mpsApplicationService.getSalesPlanListInMpsAvailable(searchCondition, startDate, endDate);
 	}
 
-	@Override
-	public HashMap<String, Object> convertContractDetailToMps(
+	@Override//변환하다.
+	public List<MpsTO> convertContractDetailToMps(
 			ArrayList<ContractDetailInMpsAvailableTO> contractDetailInMpsAvailableList) {
-		return mpsAS.convertContractDetailToMps(contractDetailInMpsAvailableList);
+		return mpsApplicationService.convertContractDetailToMps(contractDetailInMpsAvailableList);
 	}
 
 	@Override
 	public HashMap<String, Object> convertSalesPlanToMps(
 			ArrayList<SalesPlanInMpsAvailableTO> contractDetailInMpsAvailableList) {
-		return mpsAS.convertSalesPlanToMps(contractDetailInMpsAvailableList);
+		return mpsApplicationService.convertSalesPlanToMps(contractDetailInMpsAvailableList);
 	}
 
 	@Override
 	public HashMap<String, Object> batchMpsListProcess(ArrayList<MpsTO> mpsTOList) {
-		return mpsAS.batchMpsListProcess(mpsTOList);
+		return mpsApplicationService.batchMpsListProcess(mpsTOList);
 	}
 
 	@Override
-	public ArrayList<MrpTO> searchMrpList(String mrpGatheringStatusCondition) {
-		return mrpAS.searchMrpList(mrpGatheringStatusCondition);
+	public ArrayList<MrpTO> searchMrpList(String mrpGatheringStatusCondition) {	
+		return mrpApplicationService.searchMrpList(mrpGatheringStatusCondition);
 	}
 
 	@Override
 	public ArrayList<MrpTO> searchMrpList(String dateSearchCondtion, String startDate, String endDate) {
-		return mrpAS.searchMrpList(dateSearchCondtion, startDate, endDate);
+		return mrpApplicationService.searchMrpList(dateSearchCondtion, startDate, endDate);
 	}
 
 	@Override
 	public ArrayList<MrpTO> searchMrpListAsMrpGatheringNo(String mrpGatheringNo) {
-		return mrpAS.searchMrpListAsMrpGatheringNo(mrpGatheringNo);
+		return mrpApplicationService.searchMrpListAsMrpGatheringNo(mrpGatheringNo);
 	}
 
 	@Override
 	public ArrayList<MrpGatheringTO> searchMrpGatheringList(String dateSearchCondtion, String startDate,
 			String endDate) {
-		return mrpAS.searchMrpGatheringList(dateSearchCondtion, startDate, endDate);
+		return mrpApplicationService.searchMrpGatheringList(dateSearchCondtion, startDate, endDate);
 	}
 
 	@Override
 	public HashMap<String, Object> openMrp(ArrayList<String> mpsNoArr) {
-		return mrpAS.openMrp(mpsNoArr);
+		return mrpApplicationService.openMrp(mpsNoArr);
 	}
 	
 	@Override
-	public HashMap<String, Object> registerMrp(String mrpRegisterDate, ArrayList<String> mpsList) {
-		return mrpAS.registerMrp(mrpRegisterDate, mpsList);
+	public HashMap<String, Object> registerMrp(String mrpRegisterDate, String mpsNo) {
+		return mrpApplicationService.registerMrp(mrpRegisterDate, mpsNo);
 	}
 
 	@Override
 	public HashMap<String, Object> batchMrpListProcess(ArrayList<MrpTO> mrpTOList) {
-		return mrpAS.batchMrpListProcess(mrpTOList);
+		return mrpApplicationService.batchMrpListProcess(mrpTOList);
 	}
 
 	@Override
 	public ArrayList<MrpGatheringTO> getMrpGathering(ArrayList<String> mrpNoArr) {
-		return mrpAS.getMrpGathering(mrpNoArr);
+		return mrpApplicationService.getMrpGathering(mrpNoArr);
 	}
 	
 	@Override
 	public HashMap<String, Object> registerMrpGathering(String mrpGatheringRegisterDate,ArrayList<String> mrpNoArr,HashMap<String, String> mrpNoAndItemCodeMap) {
-		return mrpAS.registerMrpGathering(mrpGatheringRegisterDate, mrpNoArr,mrpNoAndItemCodeMap);
+		return mrpApplicationService.registerMrpGathering(mrpGatheringRegisterDate, mrpNoArr,mrpNoAndItemCodeMap);
 	}
 	
 	@Override
 	public HashMap<String, Object> getWorkOrderableMrpList() {
-		return workOrderAS.getWorkOrderableMrpList();
+		return workOrderApplicationService.getWorkOrderableMrpList();
 	}
 	
 	@Override
-	public HashMap<String,Object> getWorkOrderSimulationList(String mrpGatheringNo,String mrpNo) {
-		return workOrderAS.getWorkOrderSimulationList(mrpGatheringNo,mrpNo);
+	public ArrayList<WorkOrderSimulationTO> getWorkOrderSimulationList(ArrayList<String> mrpNo) {
+		return workOrderApplicationService.getWorkOrderSimulationList(mrpNo);
 	}
 	
 	@Override
-	public HashMap<String,Object> workOrder(String mrpGatheringNo,String workPlaceCode,String productionProcess,String mrpNo) {
-    	return workOrderAS.workOrder(mrpGatheringNo,workPlaceCode,productionProcess,mrpNo);
+	public HashMap<String,Object> workOrder(ArrayList<String> mrpGatheringNo,String workPlaceCode,String productionProcess,ArrayList<String> mrpNo) {
+    	return workOrderApplicationService.workOrder(mrpGatheringNo,workPlaceCode,productionProcess,mrpNo);
 	}
 
 	@Override
 	public ArrayList<WorkOrderInfoTO> getWorkOrderInfoList() {
-		return workOrderAS.getWorkOrderInfoList();
+		return workOrderApplicationService.getWorkOrderInfoList();
 	}
 
 	@Override
 	public HashMap<String,Object> workOrderCompletion(String workOrderNo,String actualCompletionAmount) {
-    	return workOrderAS.workOrderCompletion(workOrderNo,actualCompletionAmount);
+    	return workOrderApplicationService.workOrderCompletion(workOrderNo,actualCompletionAmount);
 	}
 
 	@Override
-	public ArrayList<ProductionPerformanceInfoTO> getProductionPerformanceInfoList() {
-		return workOrderAS.getProductionPerformanceInfoList();
+	public ArrayList<ProductionPerformanceInfoTO> getProductionPerformanceInfoList(String startDate,String endDate) {
+		return workOrderApplicationService.getProductionPerformanceInfoList(startDate,endDate);
 	}
 
 	@Override
-	public HashMap<String,Object> showWorkSiteSituation(String workSiteCourse,String workOrderNo,String itemClassIfication) {
-		return workOrderAS.showWorkSiteSituation(workSiteCourse,workOrderNo,itemClassIfication);
+	public HashMap<String,Object> showWorkSiteSituation(String workSiteCourse,String workOrderNo) {
+		return workOrderApplicationService.showWorkSiteSituation(workSiteCourse,workOrderNo);
 	}
 
 	@Override
-	public void workCompletion(String workOrderNo, String itemCode ,  ArrayList<String> itemCodeListArr) {
-		workOrderAS.workCompletion(workOrderNo,itemCode,itemCodeListArr);
+	public void workCompletion(String workOrderNo) {
+		workOrderApplicationService.workCompletion(workOrderNo);
 	}
 
 	@Override
 	public HashMap<String, Object> workSiteLogList(String workSiteLogDate) {
-		return workOrderAS.workSiteLogList(workSiteLogDate);
+		return workOrderApplicationService.workSiteLogList(workSiteLogDate);
 	}
 }

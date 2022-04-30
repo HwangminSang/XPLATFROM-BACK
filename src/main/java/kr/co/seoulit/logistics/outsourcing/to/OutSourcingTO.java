@@ -1,8 +1,10 @@
 package kr.co.seoulit.logistics.outsourcing.to;
 
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
 
 @Data
+@Dataset(name="gds_outsourcing")
 public class OutSourcingTO {
 	private String outsourcingNo;
 	private String materialStatus;

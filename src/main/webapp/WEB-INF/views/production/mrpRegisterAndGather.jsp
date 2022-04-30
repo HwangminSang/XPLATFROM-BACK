@@ -270,8 +270,10 @@
         let isChecked = document.querySelector("#includeMrpApplyRadio").checked; 
         let mrpApply =  isChecked ? "includeMrpApply" : "excludeMrpApply";
         console.log(mrpApply);
+        
         mpsGridOptions.api.setRowData([]);
-        xhr.open('GET', '/production/searchMpsInfo.do' +
+        
+        xhr.open('GET', '/production/searchMpsInfo' +
             "?method=searchMpsInfo"
             + "&startDate=" + fromDate.value
             + "&endDate=" + toDate.value
@@ -310,13 +312,14 @@
     })();
     showMrpSimulationBtn.addEventListener("click", () => {  // mrp 모의전개 
         let selectedRows   = mpsGridOptions.api.getSelectedNodes();
-    console.log(mpsGridOptions.api.getSelectedNodes());
+    	console.log(mpsGridOptions.api.getSelectedNodes());
         if (selectedRows == "") {
             Swal.fire("알림", "모의전개할 mps를 선택하십시오.", "info");
             return;
         }
         console.log(selectedRows);
         _setMrpModal();
+        $('#mrpModal').removeData();   			 // 모달 초기화
         getMrpList(selectedRows);  // mpsRowNode : 선택한 로우 객체 (전역변수)
         $('#mrpModal').modal('show');
         mpsGridOptions.api.deselectAll(); // 선택 해제
@@ -327,7 +330,7 @@
             Swal.fire("알림", "전개 등록 일자를 입력하십시오.", "info");
             return;
         }
-        registerMrp(mrpDate.value);  // mrpDate : 소요량전개일자 
+        registerMrp(mrpDate.value); 			 // mrpDate : 소요량전개일자 
     });
     
     $('#mrpModal').on('hidden.bs.modal', function (e) {
@@ -411,7 +414,7 @@
     let mrpSearchData;
     const getMrpSearchData = () => {
         let xhr = new XMLHttpRequest(); 
-        xhr.open('GET', '${pageContext.request.contextPath}/production/getMrpList.do' +
+        xhr.open('GET', '${pageContext.request.contextPath}/production/getMrpList' +
             "?method=getMrpList"
             + "&mrpGatheringStatusCondition=null",   // 소요량취합상태 = null
             true)
@@ -422,6 +425,7 @@
                 let txt = xhr.responseText;
                 mrpSearchData = JSON.parse(txt);
                 console.log(mrpSearchData);
+                mrpSearchGridOptions.api.refreshHeader();   // 그리드 초기화
                 mrpSearchGridOptions.api.setRowData(mrpSearchData.gridRowJson);
                 if (txt.errorCode < 0) {
                     Swal.fire({
@@ -447,11 +451,14 @@
     let mrpNoList = [];
     let mrpNoAndItemCodeList = {};
     showMrpGatheringBtn.addEventListener('click', () => { // 소요량취합결과조회
+    	mrpNoList = [];
+    	mrpNoAndItemCodeList = {};
         _setMrpGatheringModal();  // 모달에 그리드를 세팅 
         for (let data of mrpSearchData.gridRowJson) {  // 소요량취합되지 않은 데이터 
             mrpNoList.push(data.mrpNo);
             mrpNoAndItemCodeList[data.mrpNo] = data.itemCode;
         }
+        $('#mrpGatheringModal').removeData();  // 모달 초기화
         getMrpGatheringModal(mrpNoList); // 소요량취합결과 데이터를 받아와 그리드에 세팅 
         $('#mrpGatheringModal').modal('show');   
     });
@@ -462,6 +469,7 @@
         }
         registerMrpGathering(mrpGatheringDate.value, mrpNoList, mrpNoAndItemCodeList);
         $('#mrpGatheringModal').modal('hide');
+        getMrpSearchData();
     });
     
     $('#mrpGatheringModal').on('hidden.bs.modal', function () {

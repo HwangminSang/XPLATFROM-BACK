@@ -508,7 +508,7 @@ function initEvent() {
 
 		$.ajax({ 
 			type : 'POST',
-			url : '${pageContext.request.contextPath}/base/changeCodeUseCheckProcess.do' ,
+			url : '${pageContext.request.contextPath}/base/changeCodeUseCheckProcess' ,
 			async :false,
 			data : {
 				method : 'changeCodeUseCheckProcess', 
@@ -625,7 +625,7 @@ function initEvent() {
 			
 			$.ajax({ 
 				type : 'POST',
-				url : '${pageContext.request.contextPath}/logisticsInfo/batchItemListProcess.do' ,
+				url : '${pageContext.request.contextPath}/logisticsInfo/batchItemListProcess' ,
 				async :false,
 				data : {
 					method : 'batchListProcess', 
@@ -720,7 +720,7 @@ function showItemGrid() {
 	// ajax 시작
 	$.ajax({ 
 		type : 'GET',
-		url : '${pageContext.request.contextPath}/logisticsInfo/searchItem.do' ,
+		url : '${pageContext.request.contextPath}/logisticsInfo/searchItem' ,
 		data : {
 			method : 'searchItem' ,
 			searchCondition :  searchConditionValue ,
@@ -889,7 +889,7 @@ function showCodeDialog(grid, rowid, iCol, divisionCodeNo, title){
 
 	$("#codeGrid").jqGrid({
 		
-            url:"${pageContext.request.contextPath}/base/codeList.do",
+            url:"${pageContext.request.contextPath}/base/codeList",
             datatype: "json",
             jsonReader: { root: "detailCodeList" },
             getData: { 

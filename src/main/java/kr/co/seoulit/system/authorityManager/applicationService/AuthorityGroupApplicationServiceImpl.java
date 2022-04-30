@@ -5,15 +5,17 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.co.seoulit.system.authorityManager.dao.AuthorityGroupDAO;
+import kr.co.seoulit.system.authorityManager.mapper.AuthorityGroupDAO;
 import kr.co.seoulit.system.authorityManager.to.AuthorityGroupTO;
 import kr.co.seoulit.system.authorityManager.to.EmployeeAuthorityTO;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @Component
 public class AuthorityGroupApplicationServiceImpl implements AuthorityGroupApplicationService {
 	
 	
-	@Autowired
+
 	private AuthorityGroupDAO authorityGroupDAO;
 	
 	

@@ -2,7 +2,6 @@ package kr.co.seoulit.system.common.configuration;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.ajp.AbstractAjpProtocol;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 public class ContainerConfiguration {
+	
 	@Bean
 	public ServletWebServerFactory servletContainer() {
 		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
@@ -43,7 +43,7 @@ public class ContainerConfiguration {
 		CommonsMultipartResolver commonsMultipartResolver=new CommonsMultipartResolver();
 		commonsMultipartResolver.setDefaultEncoding("UTF-8");
 		commonsMultipartResolver.setMaxUploadSizePerFile(10*1024*1024);
-		return commonsMultipartResolver;
-		
+		return commonsMultipartResolver;		
 	}
+	
 }

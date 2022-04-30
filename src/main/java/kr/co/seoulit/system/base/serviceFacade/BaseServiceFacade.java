@@ -3,9 +3,6 @@ package kr.co.seoulit.system.base.serviceFacade;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
 
 import kr.co.seoulit.system.base.to.AddressTO;
 import kr.co.seoulit.system.base.to.BoardFileTO;

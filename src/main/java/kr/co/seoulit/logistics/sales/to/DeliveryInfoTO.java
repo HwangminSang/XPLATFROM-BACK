@@ -1,10 +1,21 @@
 package kr.co.seoulit.logistics.sales.to;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import kr.co.seoulit.system.base.to.BaseTO;
+import kr.co.seoulit.system.common.annotation.Dataset;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+@Entity
 @Data
+@EqualsAndHashCode(callSuper=false)
+@Table(name="DELIVERY_INFO")
+@Dataset(name="gds_deliveryInfo")
 public class DeliveryInfoTO extends BaseTO {
 	
+	@Id
 	private String deliveryNo;
 	private String estimateNo;
 	private String contractNo;
@@ -17,7 +28,7 @@ public class DeliveryInfoTO extends BaseTO {
 	private String deliveryAmount;
 	private String unitPrice;
 	private String sumPrice;
-	private String deliverydate;
+	private String deliveryDate;
 	private String deliveryPlaceName;
 	
 }

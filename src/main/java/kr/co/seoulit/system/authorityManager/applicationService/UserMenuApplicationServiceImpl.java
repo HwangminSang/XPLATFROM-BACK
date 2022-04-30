@@ -9,15 +9,18 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import kr.co.seoulit.system.authorityManager.dao.UserMenuDAO;
+import kr.co.seoulit.system.authorityManager.mapper.MenuAuthorityDAO;
+import kr.co.seoulit.system.authorityManager.mapper.MenuDAO;
+import kr.co.seoulit.system.authorityManager.mapper.UserMenuDAO;
 import kr.co.seoulit.system.authorityManager.to.UserMenuTO;
-
+import lombok.AllArgsConstructor;
+@AllArgsConstructor
 @Service
 public class UserMenuApplicationServiceImpl implements UserMenuApplicationService {
 
 	// DAO 참조변수 선언
-	@Autowired
-	private  UserMenuDAO userMenuDAO;
+
+	private final UserMenuDAO userMenuDAO;
 
 	public String getUserMenuCode(String workplaceCode, String deptCode, String positionCode,
 			ServletContext application) {

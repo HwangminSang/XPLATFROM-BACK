@@ -11,6 +11,7 @@ import kr.co.seoulit.hr.affair.to.EmpInfoTO;
 import kr.co.seoulit.hr.affair.to.EmployeeBasicTO;
 import kr.co.seoulit.hr.affair.to.EmployeeDetailTO;
 import kr.co.seoulit.hr.affair.to.EmployeeSecretTO;
+import kr.co.seoulit.hr.affair.to.EmployeeTO;
 
 @Service
 public class AffairServiceFacadeImpl implements AffairServiceFacade {
@@ -77,6 +78,20 @@ public class AffairServiceFacadeImpl implements AffairServiceFacade {
 	public void updateEmpImg(EmployeeDetailTO employeeDetailTO) {
 		
 		empAS.updateEmpImg(employeeDetailTO);
+		
+	}
+	
+	@Override
+	public ArrayList<EmployeeTO> getEmployeeList() {
+		
+		return empAS.getEmployeeList();
+		
+	}
+
+	@Override
+	public void batchEmpInfo(EmployeeTO employee) {
+		
+		empAS.batchEmpInfo(employee);
 		
 	}
 
